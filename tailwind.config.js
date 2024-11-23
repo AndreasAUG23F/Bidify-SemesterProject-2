@@ -1,8 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './/*.{html,js,ts}',
+    './src/**/*.{html,js,ts}',
+    './**/*.{html,js,ts}',
+    '!./node_modules//*',
+  ],
   theme: {
-    extend: {},
+    extend: {
+      components: {
+        '.btn': {
+          '@apply px-4 py-2 font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600':
+            {},
+        },
+      },
+    },
   },
   plugins: [],
 };

@@ -4,12 +4,13 @@ const form = document.forms.register;
 
 form.addEventListener("submit", onRegister); */
 
-import { onRegister } from "../../ui/auth/register.js";
+import { onRegister } from '../../ui/auth/register.js';
 
 const form = document.forms.register;
+console.log('hello', form);
 
 if (form) {
-  form.addEventListener("submit", onRegister);
+  form.addEventListener('submit', onRegister);
 } else {
   console.error("Form with name 'register' not found!");
 }
