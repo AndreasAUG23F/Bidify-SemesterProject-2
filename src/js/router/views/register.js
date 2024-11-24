@@ -7,7 +7,6 @@ form.addEventListener("submit", onRegister); */
 import { onRegister } from '../../ui/auth/register.js';
 
 const form = document.forms.register;
-console.log('hello', form);
 
 if (form) {
   form.addEventListener('submit', onRegister);
