@@ -1,9 +1,13 @@
+import { setLogoutListener } from '../global/logout';
+
 export const makeHeader = () => {
   const header = document.querySelector('header');
 
+  header.innerHTML = '';
+
   const nav = document.createElement('nav');
   nav.className =
-    'flex items-center justify-between px-12 py-4 md:flex-row flex-col';
+    'flex flex-col md:flex-row items-center justify-between px-6 py-4';
 
   const logoDiv = document.createElement('div');
   logoDiv.className = 'flex-shrink-0';
@@ -11,22 +15,13 @@ export const makeHeader = () => {
   const logoImg = document.createElement('img');
   logoImg.src = '/images/bidifyLogo.png';
   logoImg.alt = 'Logo';
-  logoImg.className = 'h-160 w-auto';
+  logoImg.className = 'h-16 w-auto md:h-20';
 
   logoDiv.appendChild(logoImg);
 
-  const smallScreenSearch = document.createElement('a');
-  smallScreenSearch.href = '#';
-  smallScreenSearch.className =
-    'md:hidden text-gray-700 hover:text-gray-900 text-4xl my-4';
-
-  const smallScreenSearchIcon = document.createElement('i');
-  smallScreenSearchIcon.className = 'fa-solid fa-magnifying-glass';
-  smallScreenSearch.appendChild(smallScreenSearchIcon);
-
   const navLinksDiv = document.createElement('div');
   navLinksDiv.className =
-    'flex items-center space-x-20 text-xl md:text-3xl mt-4 md:mt-0';
+    'hidden md:flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 text-lg md:text-xl';
 
   const homeLink = document.createElement('a');
   homeLink.href = '/';
@@ -38,13 +33,13 @@ export const makeHeader = () => {
 
   if (loggedIn) {
     const createListingLink = document.createElement('a');
-    createListingLink.href = './views/postCreate.js';
+    createListingLink.href = '/create-listing';
     createListingLink.className =
       'font-medium text-gray-700 hover:text-gray-900';
     createListingLink.textContent = 'Create Listing';
 
     const profileLink = document.createElement('a');
-    profileLink.href = 'views/profile.js';
+    profileLink.href = '/profile';
     profileLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     profileLink.textContent = 'Profile';
 
@@ -71,20 +66,61 @@ export const makeHeader = () => {
     navLinksDiv.appendChild(loginLink);
   }
 
+  const iconDiv = document.createElement('div');
+  iconDiv.className = 'flex items-center';
+
+  const menuToggle = document.createElement('button');
+  menuToggle.className = 'block md:hidden text-gray-700 hover:text-gray-900';
+  menuToggle.innerHTML = '<i class="fa-solid fa-bars text-2xl"></i>';
+  menuToggle.addEventListener('click', () => {
+    navLinksDiv.classList.toggle('hidden');
+    navLinksDiv.classList.toggle('flex');
+    nav.classList.toggle('flex-col');
+    nav.classList.toggle('flex-row');
+    nav.classList.toggle('justify-center');
+  });
+
   const largeScreenSearch = document.createElement('a');
   largeScreenSearch.href = '#';
   largeScreenSearch.className =
     'hidden md:inline text-gray-700 hover:text-gray-900';
 
   const largeScreenSearchIcon = document.createElement('i');
-  largeScreenSearchIcon.className = 'fa-solid fa-magnifying-glass text-4xl';
+  largeScreenSearchIcon.className =
+    'fa-solid fa-magnifying-glass text-2xl md:text-3xl';
   largeScreenSearch.appendChild(largeScreenSearchIcon);
 
-  navLinksDiv.appendChild(largeScreenSearch);
+  iconDiv.appendChild(menuToggle);
+  iconDiv.appendChild(largeScreenSearch);
 
   nav.appendChild(logoDiv);
-  nav.appendChild(smallScreenSearch);
   nav.appendChild(navLinksDiv);
+  nav.appendChild(iconDiv);
 
   header.appendChild(nav);
+
+  const mediaQuery = window.matchMedia('(max-width: 768px)');
+  const handleMediaChange = (e) => {
+    if (e.matches) {
+      nav.classList.remove('flex-col');
+      nav.classList.add('flex-row');
+      nav.classList.add('justify-center');
+      if (!navLinksDiv.classList.contains('hidden')) {
+        navLinksDiv.classList.add('hidden');
+        navLinksDiv.classList.remove('flex');
+      }
+    } else {
+      nav.classList.add('flex-col');
+      nav.classList.remove('flex-row');
+      nav.classList.remove('justify-center');
+      navLinksDiv.classList.remove('hidden');
+      navLinksDiv.classList.add('flex');
+    }
+  };
+
+  mediaQuery.addEventListener('change', handleMediaChange);
+  handleMediaChange(mediaQuery);
+
+  // Attach logout listener after the header is rendered
+  setLogoutListener();
 };
