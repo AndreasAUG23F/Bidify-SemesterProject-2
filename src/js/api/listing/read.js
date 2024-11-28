@@ -25,6 +25,8 @@ export async function readListings(limit = 12, page = 1, tag) {
       page: page.toString(),
       _seller: true,
       _bids: true,
+      sort: 'created',
+      sortOrder: 'desc',
     });
 
     if (tag) {
