@@ -87,26 +87,12 @@ export const displayListings = (listings) => {
     }
 
     const viewButton = document.createElement('button');
-    viewButton.innerText = 'View Listing';
-    viewButton.className = 'viewButton';
-    viewButton.style.backgroundColor = '#007BFF';
-    viewButton.style.color = 'white';
-    viewButton.style.border = 'none';
-    viewButton.style.borderRadius = '4px';
-    viewButton.style.padding = '10px 20px';
-    viewButton.style.cursor = 'pointer';
-    viewButton.style.fontSize = '14px';
-    viewButton.style.marginTop = 'auto';
-
-    viewButton.addEventListener('click', () => {
-      window.location.href = `post/index.html?id=${listing.id}`;
-    });
-
-    viewButton.addEventListener('mouseover', () => {
-      viewButton.style.backgroundColor = '#0056b3';
-    });
-    viewButton.addEventListener('mouseout', () => {
-      viewButton.style.backgroundColor = '#007BFF';
+    viewButton.innerText = 'View Post';
+    viewButton.className =
+      'bg-blue-600 text-white py-2 px-4 mt-4 rounded-md hover:bg-blue-700';
+    viewButton.addEventListener('click', async () => {
+      window.location.href = '/post/';
+      localStorage.setItem('listingData', JSON.stringify(listing));
     });
 
     container.append(image, title, description, currentBid, viewButton);

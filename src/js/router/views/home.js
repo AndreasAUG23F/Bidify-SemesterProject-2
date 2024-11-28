@@ -1,6 +1,7 @@
 import { displayListings } from '../../ui/listing/makeListing';
 import { readListings } from '../../api/listing/read';
 import { initCarousel } from '../../ui/global/carousel';
+
 async function runPage() {
   try {
     const listings = await readListings();

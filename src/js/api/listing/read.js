@@ -3,7 +3,7 @@ import { headers } from '../header';
 
 export async function readListing(id) {
   try {
-    const response = await fetch(`${AUCTION_LISTINGS}/${id}?_author=true`, {
+    const response = await fetch(`${AUCTION_LISTINGS}/${id}?seller=true`, {
       method: 'GET',
       headers: headers(),
     });
