@@ -1,4 +1,4 @@
-import { onCreateListing } from '../../ui/listing/createListing';
+import { onCreateListing } from '../../ui/listing/create';
 
 const form = document.forms.createListing;
 

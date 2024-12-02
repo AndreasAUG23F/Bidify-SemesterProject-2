@@ -1,4 +1,5 @@
 import { createListing } from '../../api/listing/create';
+
 /**
  * Handles the create listing form submission.
  *
@@ -9,12 +10,20 @@ export async function onCreateListing(event) {
 
   const formData = new FormData(event.target);
 
+  // Collect image URLs as an array of strings
+  const imageUrls = formData.get('mediaUrl')
+    ? formData
+        .get('mediaUrl')
+        .split(',')
+        .map((url) => url.trim())
+    : [];
+
   const listingData = {
     title: formData.get('title'),
     description: formData.get('description'),
     expiryDate: formData.get('expiryDate'),
-    images: Array.from(formData.getAll('images')), // Collect multiple images
+    images: imageUrls, // Pass image URLs as an array
   };
 
-  createListing(listingData);
+  await createListing(listingData);
 }
