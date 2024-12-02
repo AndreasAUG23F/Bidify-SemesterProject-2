@@ -6,46 +6,26 @@ export const displayListings = (listings) => {
     return;
   }
 
-  listingContainer.style.display = 'grid';
-  listingContainer.style.gridTemplateColumns = 'repeat(3, 1fr)';
-  listingContainer.style.gap = '20px';
-  listingContainer.style.justifyContent = 'center';
-  listingContainer.style.alignItems = 'center';
-  listingContainer.style.padding = '20px';
-  listingContainer.style.maxWidth = '1200px';
-  listingContainer.style.margin = '0 auto';
+  // Tailwind grid-styling for container
+  listingContainer.className =
+    'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 max-w-6xl mx-auto';
 
   listingContainer.innerHTML = '';
 
   if (!listings || listings.length === 0) {
-    listingContainer.innerHTML = '<p>No listings available at the moment.</p>';
+    listingContainer.innerHTML =
+      '<p class="text-center text-gray-500">No listings available at the moment.</p>';
     return;
   }
 
   listings.forEach((listing) => {
     const container = document.createElement('div');
-    container.className = 'listingCard';
-    container.style.background = '#ffffff';
-    container.style.border = '1px solid #ddd';
-    container.style.borderRadius = '8px';
-    container.style.overflow = 'hidden';
-    container.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-    container.style.textAlign = 'center';
-    container.style.padding = '15px';
-    container.style.display = 'flex';
-    container.style.flexDirection = 'column';
-    container.style.alignItems = 'center';
-    container.style.height = '400px';
-    container.style.boxSizing = 'border-box';
+    container.className =
+      'bg-white border border-gray-200 rounded-lg shadow-md p-4 flex flex-col items-center text-center';
 
     const image = document.createElement('img');
-    image.className = 'listingImage';
+    image.className = 'w-full h-40 object-cover rounded-t-lg mb-4';
     image.loading = 'lazy';
-    image.style.width = '100%';
-    image.style.height = '150px';
-    image.style.objectFit = 'cover';
-    image.style.borderRadius = '8px 8px 0 0';
-    image.style.marginBottom = '10px';
 
     if (Array.isArray(listing.media) && listing.media.length > 0) {
       const mediaItem = listing.media[0];
@@ -55,26 +35,14 @@ export const displayListings = (listings) => {
 
     const title = document.createElement('h2');
     title.innerText = listing.title;
-    title.className = 'listingTitle';
-    title.style.fontSize = '18px';
-    title.style.fontWeight = 'bold';
-    title.style.color = '#333';
-    title.style.margin = '10px 0';
+    title.className = 'text-lg font-semibold text-gray-800 mb-2';
 
     const description = document.createElement('p');
-    description.innerText = listing.description;
-    description.className = 'listingDescription';
-    description.style.fontSize = '14px';
-    description.style.color = '#555';
-    description.style.margin = '10px 0';
-    description.style.flexGrow = '1';
+    description.innerText = listing.description || 'No description available.';
+    description.className = 'text-sm text-gray-600 mb-4 flex-grow';
 
     const currentBid = document.createElement('p');
-    currentBid.className = 'currentBid';
-    currentBid.style.fontSize = '16px';
-    currentBid.style.fontWeight = 'bold';
-    currentBid.style.color = '#007BFF';
-    currentBid.style.margin = '10px 0';
+    currentBid.className = 'text-md font-bold text-blue-600 mb-4';
     if (
       listing.bids &&
       Array.isArray(listing.bids) &&
@@ -89,7 +57,7 @@ export const displayListings = (listings) => {
     const viewButton = document.createElement('button');
     viewButton.innerText = 'View Post';
     viewButton.className =
-      'bg-blue-600 text-white py-2 px-4 mt-4 rounded-md hover:bg-blue-700';
+      'bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors';
     viewButton.addEventListener('click', async () => {
       window.location.href = '/post/';
       localStorage.setItem('listingData', JSON.stringify(listing));
