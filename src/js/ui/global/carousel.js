@@ -23,7 +23,6 @@ export const initCarousel = async (carouselSelector) => {
       } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden group`;
       slide.style.position = 'relative';
 
-      // Image
       const image = document.createElement('img');
       image.className =
         'listingImage w-full h-full object-cover rounded-lg transition group-hover:blur-sm group-hover:brightness-75';
@@ -37,7 +36,6 @@ export const initCarousel = async (carouselSelector) => {
         image.style.background = '#f0f0f0';
       }
 
-      // Title overlay
       const title = document.createElement('div');
       title.className =
         'absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white text-sm sm:text-base lg:text-lg px-4 py-2 rounded-lg text-center';
@@ -52,7 +50,6 @@ export const initCarousel = async (carouselSelector) => {
         localStorage.setItem('listingData', JSON.stringify(listing));
       });
 
-      // Append elements to slide
       slide.append(image, title, viewButton);
       carouselContainer.appendChild(slide);
     });

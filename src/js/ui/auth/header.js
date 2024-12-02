@@ -9,15 +9,17 @@ export const makeHeader = () => {
   nav.className =
     'flex flex-col md:flex-row items-center justify-between px-6 py-4';
 
-  const logoDiv = document.createElement('div');
-  logoDiv.className = 'flex-shrink-0';
+  const logoLink = document.createElement('a');
+  logoLink.href = '/';
+  logoLink.className = 'inline-block';
 
   const logoImg = document.createElement('img');
   logoImg.src = '/images/bidifyLogo.png';
   logoImg.alt = 'Logo';
-  logoImg.className = 'h-16 w-auto md:h-20';
+  logoImg.className =
+    'h-16 w-auto md:h-20 transition-transform transform hover:scale-110 duration-300';
 
-  logoDiv.appendChild(logoImg);
+  logoLink.appendChild(logoImg);
 
   const navLinksDiv = document.createElement('div');
   navLinksDiv.className =
@@ -93,9 +95,10 @@ export const makeHeader = () => {
   iconDiv.appendChild(menuToggle);
   iconDiv.appendChild(largeScreenSearch);
 
-  nav.appendChild(logoDiv);
+  nav.appendChild(logoLink);
   nav.appendChild(navLinksDiv);
-  nav.appendChild(iconDiv);
+  nav.appendChild(menuToggle);
+  nav.appendChild(largeScreenSearch);
 
   header.appendChild(nav);
 
@@ -121,6 +124,5 @@ export const makeHeader = () => {
   mediaQuery.addEventListener('change', handleMediaChange);
   handleMediaChange(mediaQuery);
 
-  // Attach logout listener after the header is rendered
   setLogoutListener();
 };
