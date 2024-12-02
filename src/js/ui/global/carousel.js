@@ -20,12 +20,13 @@ export const initCarousel = async (carouselSelector) => {
       const slide = document.createElement('div');
       slide.className = `carousel-slide ${
         index === 0 ? 'block' : 'hidden'
-      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden`;
+      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden group`;
       slide.style.position = 'relative';
 
+      // Image
       const image = document.createElement('img');
-      image.className = 'listingImage w-full h-full object-cover rounded-lg';
-
+      image.className =
+        'listingImage w-full h-full object-cover rounded-lg transition group-hover:blur-sm group-hover:brightness-75';
       if (Array.isArray(listing.media) && listing.media.length > 0) {
         const mediaItem = listing.media[0];
         image.src = mediaItem.url || '';
@@ -36,12 +37,23 @@ export const initCarousel = async (carouselSelector) => {
         image.style.background = '#f0f0f0';
       }
 
+      // Title overlay
       const title = document.createElement('div');
       title.className =
         'absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white text-sm sm:text-base lg:text-lg px-4 py-2 rounded-lg text-center';
       title.innerText = listing.title || 'No Title';
 
-      slide.append(image, title);
+      const viewButton = document.createElement('button');
+      viewButton.innerText = 'View Listing';
+      viewButton.className =
+        'absolute inset-x-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white text-lg sm:text-xl py-5 px-20 rounded-md shadow-xl opacity-0 group-hover:opacity-100 whitespace-nowrap hover:bg-blue-700 transition-all flex items-center justify-center';
+      viewButton.addEventListener('click', () => {
+        window.location.href = '/post/';
+        localStorage.setItem('listingData', JSON.stringify(listing));
+      });
+
+      // Append elements to slide
+      slide.append(image, title, viewButton);
       carouselContainer.appendChild(slide);
     });
 
