@@ -20,7 +20,6 @@
         <h1 class="text-4xl font-light mb-6">Create listing</h1>
 
         <form name="createListing" class="space-y-6">
-          <!-- Title -->
           <div>
             <input
               type="text"
@@ -31,7 +30,6 @@
             />
           </div>
 
-          <!-- Description -->
           <div>
             <textarea
               name="description"
@@ -42,7 +40,6 @@
             ></textarea>
           </div>
 
-          <!-- Expiry Date -->
           <div>
             <input
               type="date"
@@ -52,22 +49,20 @@
             />
           </div>
 
-          <!-- Images -->
           <div>
-            <label for="images" class="block text-left text-gray-600 mb-1">
-              Upload Images
+            <label for="mediaUrl" class="block text-left text-gray-600 mb-1">
+              Image URLs (comma-separated)
             </label>
             <input
-              type="file"
-              id="images"
-              name="images"
-              multiple
-              accept="image/*"
+              type="text"
+              id="mediaUrl"
+              name="mediaUrl"
+              placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
               class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             />
           </div>
 
-          <!-- Submit Button -->
           <div>
             <button
               type="submit"
