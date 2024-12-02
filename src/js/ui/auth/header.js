@@ -35,7 +35,7 @@ export const makeHeader = () => {
 
   if (loggedIn) {
     const createListingLink = document.createElement('a');
-    createListingLink.href = '/create-listing';
+    createListingLink.href = '/post/create/';
     createListingLink.className =
       'font-medium text-gray-700 hover:text-gray-900';
     createListingLink.textContent = 'Create Listing';
@@ -83,7 +83,7 @@ export const makeHeader = () => {
   });
 
   const largeScreenSearch = document.createElement('a');
-  largeScreenSearch.href = '#';
+  largeScreenSearch.href = '/post/create/';
   largeScreenSearch.className =
     'hidden md:inline text-gray-700 hover:text-gray-900';
 
