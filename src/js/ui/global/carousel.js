@@ -20,15 +20,11 @@ export const initCarousel = async (carouselSelector) => {
       const slide = document.createElement('div');
       slide.className = `carousel-slide ${
         index === 0 ? 'block' : 'hidden'
-      } object-cover w-full h-[500px] max-w-full rounded-2xl`;
+      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden`;
       slide.style.position = 'relative';
 
       const image = document.createElement('img');
-      image.className = 'listingImage';
-      image.style.width = '100%';
-      image.style.height = '100%';
-      image.style.objectFit = 'cover';
-      image.style.borderRadius = '8px';
+      image.className = 'listingImage w-full h-full object-cover rounded-lg';
 
       if (Array.isArray(listing.media) && listing.media.length > 0) {
         const mediaItem = listing.media[0];
@@ -41,19 +37,9 @@ export const initCarousel = async (carouselSelector) => {
       }
 
       const title = document.createElement('div');
-      title.className = 'carousel-title';
+      title.className =
+        'absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white text-sm sm:text-base lg:text-lg px-4 py-2 rounded-lg text-center';
       title.innerText = listing.title || 'No Title';
-      title.style.position = 'absolute';
-      title.style.bottom = '20px';
-      title.style.left = '50%';
-      title.style.transform = 'translateX(-50%)';
-      title.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-      title.style.color = 'white';
-      title.style.padding = '10px 20px';
-      title.style.borderRadius = '5px';
-      title.style.fontSize = '16px';
-      title.style.textAlign = 'center';
-      title.style.width = 'auto';
 
       slide.append(image, title);
       carouselContainer.appendChild(slide);
@@ -70,9 +56,8 @@ export const initCarousel = async (carouselSelector) => {
 
     const dots = Array.from({ length: totalSlides }, (_, index) => {
       const dot = document.createElement('span');
-      dot.className = 'dot h-3 w-3 bg-gray-300 rounded-full transition';
-      dot.style.cursor = 'pointer';
-      dot.style.display = 'inline-block';
+      dot.className =
+        'dot h-3 w-3 bg-gray-300 rounded-full transition cursor-pointer';
 
       if (index === 0) {
         dot.classList.add('bg-gray-500');
