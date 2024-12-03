@@ -1,109 +1,80 @@
-import { authGuard } from '../../utilities/authGuard';
-import { readPostsByUser } from '../../api/post/read';
-import { onDeletePost } from '../../ui/post/delete';
-import { setLogoutListener } from '../../ui/global/logout';
+// import { authGuard } from '../../utilities/authGuard';
+// import { readUserProfile } from '../../api/user/readProfile';
+// import { readUserBids } from '../../api/auction/readUserBids';
+// import { setLogoutListener } from '../../ui/global/logout';
 
-setLogoutListener();
-authGuard();
+// setLogoutListener();
+// authGuard();
 
-const userData = JSON.parse(localStorage.getItem('userData'));
-const username = userData.name;
+// const userData = JSON.parse(localStorage.getItem('userData'));
+// const username = userData.name;
 
-/**
- * Displays the user's posts on the profile page.
- *
- * This function fetches the user's posts from the API and displays them in the DOM.
- * It creates a profile picture, banner, and username, and shows all posts
- * in a container. If no posts are available, a message is displayed.
- *
- * @async
- * @function showUserPosts
- * @returns {Promise<void>} No return value.
- */
-export const showUserPosts = async () => {
-  const outerContainer = document.getElementById('outerContainer');
+// export const renderProfilePage = async () => {
+//   const outerContainer = document.getElementById('outerContainer');
+//   outerContainer.innerHTML = '';
 
-  const data = await readPostsByUser(username);
-  const posts = data.posts;
-  console.log('Posts', posts);
+//   const userProfile = await readUserProfile(username);
+//   const userAuctions = await readUserAuctions(username);
+//   const userBids = await readUserBids(username);
 
-  outerContainer.innerHTML = '';
+//   const profileContainer = document.createElement('div');
+//   profileContainer.className = 'flex flex-col items-center py-12';
 
-  if (!posts.length) {
-    outerContainer.innerHTML = '<p>No posts available for this user.</p>';
-    return;
-  }
+//   const avatar = document.createElement('img');
+//   avatar.src = userProfile.avatar;
+//   avatar.alt = 'User Avatar';
+//   avatar.className = 'w-40 h-40 rounded-full shadow-lg object-cover';
 
-  const profileContainer = document.createElement('div');
-  profileContainer.className = 'profileContainer';
+//   const nameElement = document.createElement('h2');
+//   nameElement.innerText = username;
+//   nameElement.className = 'text-xl font-semibold mt-4';
 
-  const avatar = document.createElement('img');
-  avatar.src = userData.avatar.url;
-  avatar.alt = 'User Avatar';
-  avatar.className = 'avatar';
+//   const coinsElement = document.createElement('div');
+//   coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
+//   coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.coins || 0}</span>
+//                             <i class="fa-solid fa-coins text-yellow-500"></i>`;
 
-  const banner = document.createElement('img');
-  banner.src = userData.banner.url;
-  banner.alt = 'User Banner';
-  banner.className = 'banner';
+//   const updateProfileButton = document.createElement('button');
+//   updateProfileButton.innerText = 'Update Profile';
+//   updateProfileButton.className =
+//     'mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
 
-  const usernameElement = document.createElement('h1');
-  usernameElement.innerText = username;
-  usernameElement.className = 'username';
+//   profileContainer.append(avatar, nameElement, coinsElement, updateProfileButton);
+//   outerContainer.appendChild(profileContainer);
 
-  profileContainer.appendChild(banner);
-  profileContainer.appendChild(avatar);
-  profileContainer.appendChild(usernameElement);
+//   const auctionsSection = document.createElement('div');
+//   auctionsSection.className = 'px-6 md:px-16 lg:px-32 mt-12';
+//   auctionsSection.innerHTML = '<h2 class="text-2xl font-bold mb-6">My auctions</h2>';
 
-  outerContainer.appendChild(profileContainer);
+//   if (userAuctions.length === 0) {
+//     auctionsSection.innerHTML += '<p class="text-gray-500">No active auctions.</p>';
+//   } else {
+//     const auctionsGrid = document.createElement('div');
+//     auctionsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+//     userAuctions.forEach((auction) => {
+//       const auctionCard = document.createElement('div');
+//       auctionCard.className =
+//         'flex items-center space-x-4 bg-white shadow-md p-4 rounded-lg';
 
-  posts.forEach((post) => {
-    const container = document.createElement('div');
-    container.className = 'postContainer';
+//       const auctionImage = document.createElement('img');
+//       auctionImage.src = auction.image || '/images/default-product.png';
+//       auctionImage.alt = auction.title;
+//       auctionImage.className = 'w-24 h-24 rounded-lg object-cover';
 
-    const title = document.createElement('h2');
-    title.innerText = post.title;
-    title.className = 'post-title';
+//       const auctionDetails = document.createElement('div');
+//       auctionDetails.innerHTML = `
+//         <h3 class="text-lg font-medium">${auction.title}</h3>
+//         <p class="text-gray-500 text-sm">Current bid: $${auction.currentBid || 0}</p>
+//       `;
 
-    const content = document.createElement('p');
-    content.innerText = post.body;
-    content.className = 'post-content';
+//       auctionCard.append(auctionImage, auctionDetails);
+//       auctionsGrid.appendChild(auctionCard);
+//     });
+//     auctionsSection.appendChild(auctionsGrid);
+//   }
 
-    const imageDiv = document.createElement('div');
-    imageDiv.className = 'imageDiv';
+//   outerContainer.appendChild(auctionsSection);
 
-    const image = document.createElement('img');
-    if (post.media) {
-      image.src = post.media.url;
-      image.alt = post.media.alt;
-    }
-    image.className = 'postImage';
-
-    const editButton = document.createElement('button');
-    editButton.innerText = 'Edit Post';
-    editButton.className = 'btn-blue';
-
-    editButton.addEventListener('click', async () => {
-      localStorage.removeItem('postId');
-      localStorage.setItem('postId', JSON.stringify(post.id));
-      window.location.href = '/post/edit/';
-    });
-
-    const deleteButton = document.createElement('button');
-    deleteButton.innerText = 'Delete Post';
-    deleteButton.id = post.id;
-    deleteButton.className = 'btn-red';
-    deleteButton.addEventListener('click', onDeletePost);
-
-    container.appendChild(title);
-    container.appendChild(content);
-    container.appendChild(imageDiv);
-    imageDiv.appendChild(image);
-    container.appendChild(editButton);
-    container.appendChild(deleteButton);
-
-    outerContainer.appendChild(container);
-  });
-};
-
-showUserPosts();
+//   const bidsSection = document.createElement('div');
+//   bidsSection.className = 'px-6 md:px-16 lg:px-32 mt-12';
+//   bidsSection.innerHTML = '<h2 class="text-2xl font-bold

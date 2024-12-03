@@ -50,7 +50,19 @@ export const makeHeader = () => {
 
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logoutButton';
-    logoutButton.className = 'text-red-500 hover:text-red-400 font-medium';
+    logoutButton.className = `
+    bg-red-500 
+    text-white 
+    font-medium 
+     py -2 
+    px-4 
+    rounded-lg 
+    transform 
+    transition 
+    duration-300 
+    hover:scale-105 
+    hover:bg-red-600
+    `;
     logoutButton.textContent = 'Logout';
     navLinksDiv.appendChild(logoutButton);
   } else {

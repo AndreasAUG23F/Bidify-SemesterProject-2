@@ -1,19 +1,19 @@
-import { API_KEY } from "./constants";
+import { API_KEY } from './constants';
 
-const accessToken = localStorage.getItem("accessToken");
+const token = JSON.parse(localStorage.getItem('token'));
+
 export function headers() {
-  const headers = new Headers({
-  });
+  const headers = new Headers();
 
   if (API_KEY) {
-    headers.append("X-Noroff-API-Key", API_KEY);
+    headers.append('X-Noroff-API-Key', API_KEY);
   }
 
-  if (accessToken) {
-    headers.append("Authorization", `Bearer ${accessToken}`);
+  if (token) {
+    headers.append('Authorization', `Bearer ${token}`);
   }
 
-  headers.append("content-type", "application/json");
-  
+  headers.append('content-type', 'application/json');
+
   return headers;
 }
