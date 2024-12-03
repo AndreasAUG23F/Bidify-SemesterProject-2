@@ -20,7 +20,7 @@ export const displayListings = (listings) => {
   listings.forEach((listing) => {
     const container = document.createElement('div');
     container.className =
-      'bg-white border border-gray-200 rounded-lg shadow-md p-4 flex flex-col items-center text-center';
+      'bg-white border border-gray-200 rounded-lg shadow-md p-4 flex flex-col items-center text-center opacity-0 translate-y-10 transition duration-700 ease-in-out scroll-animate';
 
     const image = document.createElement('img');
     image.className = 'w-full h-40 object-cover rounded-t-lg mb-4';
@@ -65,4 +65,25 @@ export const displayListings = (listings) => {
     container.append(image, title, description, currentBid, viewButton);
     listingContainer.appendChild(container);
   });
+
+  const scrollElements = document.querySelectorAll('.scroll-animate');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          entry.target.classList.remove('opacity-0', 'translate-y-10');
+        } else {
+          entry.target.classList.add('opacity-0', 'translate-y-10');
+          entry.target.classList.remove('opacity-100', 'translate-y-0');
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+    }
+  );
+
+  scrollElements.forEach((el) => observer.observe(el));
 };

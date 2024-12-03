@@ -1,6 +1,4 @@
-/* mport { readProfile } from '../../api/profile/read'; */
 import { setLogoutListener } from '../global/logout';
-/* import { fetchUserCredits } from './credits'; */
 
 export const makeHeader = () => {
   const header = document.querySelector('header');
@@ -139,8 +137,6 @@ export const makeHeader = () => {
   handleMediaChange(mediaQuery);
 
   setLogoutListener();
-  /* fetchUserCredits();
-  readProfile(); */
 };
 
 /* 
