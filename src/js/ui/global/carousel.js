@@ -11,6 +11,8 @@ export const initCarousel = async (carouselSelector) => {
     const listings = await readListings(5);
     if (!listings || listings.length === 0) {
       console.error('No listings found for carousel.');
+      carouselContainer.innerHTML =
+        '<div class="text-center text-gray-500">No listings available.</div>';
       return;
     }
 
@@ -25,26 +27,26 @@ export const initCarousel = async (carouselSelector) => {
 
       const image = document.createElement('img');
       image.className =
-        'listingImage w-full h-full object-cover rounded-lg transition group-hover:blur-sm group-hover:brightness-75';
+        'listingImage w-full h-full object-cover rounded-lg transition-transform duration-700 group-hover:scale-110 group-hover:blur-sm group-hover:brightness-75';
       if (Array.isArray(listing.media) && listing.media.length > 0) {
         const mediaItem = listing.media[0];
         image.src = mediaItem.url || '';
         image.alt = mediaItem.alt || 'Listing image';
       } else {
-        console.warn(`Listing ${listing.title || 'unknown'} has no media URL.`);
         image.alt = 'No image available';
         image.style.background = '#f0f0f0';
       }
 
       const title = document.createElement('div');
       title.className =
-        'absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-60 text-white text-sm sm:text-base lg:text-lg px-4 py-2 rounded-lg text-center';
+        'absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white text-sm sm:text-base lg:text-lg px-4 py-2 rounded-lg text-center shadow-lg backdrop-blur-md';
       title.innerText = listing.title || 'No Title';
 
       const viewButton = document.createElement('button');
       viewButton.innerText = 'View Listing';
       viewButton.className =
-        'absolute inset-x-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white text-lg sm:text-xl py-5 px-20 rounded-md shadow-xl opacity-0 group-hover:opacity-100 whitespace-nowrap hover:bg-blue-700 transition-all flex items-center justify-center';
+        'absolute inset-x-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white text-lg sm:text-xl py-3 px-8 rounded shadow-lg opacity-0 group-hover:opacity-100 whitespace-nowrap transition-transform duration-300 ease-in-out hover:scale-105 flex items-center justify-center';
+      viewButton.style.minWidth = '150px';
       viewButton.addEventListener('click', () => {
         window.location.href = '/post/';
         localStorage.setItem('listingData', JSON.stringify(listing));
@@ -61,12 +63,16 @@ export const initCarousel = async (carouselSelector) => {
     const dotsContainer = document.querySelector(
       '.flex.justify-center.space-x-2.py-4.bg-white'
     );
-    dotsContainer.innerHTML = '';
+    if (!dotsContainer) {
+      console.error('Dots container not found.');
+      return;
+    }
 
+    dotsContainer.innerHTML = '';
     const dots = Array.from({ length: totalSlides }, (_, index) => {
       const dot = document.createElement('span');
       dot.className =
-        'dot h-3 w-3 bg-gray-300 rounded-full transition cursor-pointer';
+        'dot h-3 w-3 bg-gray-300 rounded-full transition cursor-pointer hover:bg-gray-400';
 
       if (index === 0) {
         dot.classList.add('bg-gray-500');
