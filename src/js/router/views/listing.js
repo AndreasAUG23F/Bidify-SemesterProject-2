@@ -53,20 +53,87 @@ const displayListingDetails = async () => {
   sellerInfo.append(sellerImage, sellerName);
 
   const mainImageContainer = document.createElement('div');
-  mainImageContainer.style.textAlign = 'center';
-  mainImageContainer.style.marginBottom = '20px';
+  mainImageContainer.className =
+    'relative w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg';
 
-  const mainImage = document.createElement('img');
-  mainImage.src = listing.media?.[0]?.url || 'placeholder.png';
-  mainImage.alt = listing.media?.[0]?.alt || 'Main Image';
-  mainImage.style.width = '80%';
-  mainImage.style.maxWidth = '400px';
-  mainImage.style.height = 'auto';
-  mainImage.style.borderRadius = '10px';
-  mainImage.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-  mainImage.style.marginBottom = '10px';
+  // Opprett en wrapper for bilder
+  const imageWrapper = document.createElement('div');
+  imageWrapper.className = 'flex transition-transform duration-500 ease-in-out';
 
-  mainImageContainer.appendChild(mainImage);
+  // Iterer gjennom bildene og legg dem til i wrapperen
+  listing.media?.forEach((mediaItem) => {
+    const image = document.createElement('img');
+    image.src = mediaItem?.url || 'placeholder.png';
+    image.alt = mediaItem?.alt || 'Product Image';
+    image.className = 'w-full h-auto object-cover flex-shrink-0';
+    imageWrapper.appendChild(image);
+  });
+  mainImageContainer.appendChild(imageWrapper);
+
+  // Opprett navigasjonsknapper
+  const prevButton = document.createElement('button');
+  prevButton.className =
+    'absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full hover:bg-opacity-75';
+  prevButton.innerHTML = '&#8249;'; // Venstre pil
+  prevButton.addEventListener('click', () => navigateSlide(-1));
+
+  const nextButton = document.createElement('button');
+  nextButton.className =
+    'absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full hover:bg-opacity-75';
+  nextButton.innerHTML = '&#8250;'; // Høyre pil
+  nextButton.addEventListener('click', () => navigateSlide(1));
+
+  mainImageContainer.appendChild(prevButton);
+  mainImageContainer.appendChild(nextButton);
+
+  // Opprett dots for bildeindikasjon
+  const dotsContainer = document.createElement('div');
+  dotsContainer.className =
+    'absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2';
+  const dots = [];
+
+  listing.media?.forEach((_, index) => {
+    const dot = document.createElement('div');
+    dot.className =
+      'w-3 h-3 bg-gray-400 rounded-full hover:bg-gray-600 cursor-pointer transition duration-300';
+    dot.addEventListener('click', () => navigateToSlide(index));
+    dots.push(dot);
+    dotsContainer.appendChild(dot);
+  });
+  mainImageContainer.appendChild(dotsContainer);
+
+  // Legg containeren til siden
+  document.getElementById('listingDetails').appendChild(mainImageContainer);
+
+  // JavaScript for å håndtere karuselllogikk
+  let currentSlide = 0;
+  const totalSlides = listing.media?.length || 0;
+
+  const navigateSlide = (direction) => {
+    currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+    updateCarousel();
+  };
+
+  const navigateToSlide = (index) => {
+    currentSlide = index;
+    updateCarousel();
+  };
+
+  const updateCarousel = () => {
+    imageWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    dots.forEach((dot, index) => {
+      if (index === currentSlide) {
+        dot.classList.add('bg-gray-800');
+        dot.classList.remove('bg-gray-400');
+      } else {
+        dot.classList.add('bg-gray-400');
+        dot.classList.remove('bg-gray-800');
+      }
+    });
+  };
+
+  // Initial oppdatering
+  updateCarousel();
 
   const infoSection = document.createElement('div');
   infoSection.innerHTML = `<h2>Info</h2><p>${listing.description || 'No description available.'}</p>`;
