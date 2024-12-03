@@ -13,8 +13,7 @@ const displayListingDetails = async () => {
   }
 
   const listing = JSON.parse(listingData);
-
-  console.log('Listing Data:', listing);
+  const loggedInUser = JSON.parse(localStorage.getItem('userData'));
 
   listingContainer.innerHTML = '';
 
@@ -37,7 +36,7 @@ const displayListingDetails = async () => {
   sellerInfo.style.gap = '10px';
 
   const sellerImage = document.createElement('img');
-  sellerImage.src = listing.seller?.avatar.url || 'default-avatar.png';
+  sellerImage.src = listing.seller?.avatar?.url || 'default-avatar.png';
   sellerImage.alt = 'Seller Avatar';
   sellerImage.style.width = '60px';
   sellerImage.style.height = '60px';
@@ -52,15 +51,35 @@ const displayListingDetails = async () => {
 
   sellerInfo.append(sellerImage, sellerName);
 
+  if (loggedInUser?.name === listing.seller?.name) {
+    const editButton = document.createElement('button');
+    editButton.innerText = 'Edit Listing';
+    editButton.style.padding = '10px 20px';
+    editButton.style.marginTop = '10px';
+    editButton.style.backgroundColor = '#007BFF';
+    editButton.style.color = '#fff';
+    editButton.style.border = 'none';
+    editButton.style.borderRadius = '4px';
+    editButton.style.cursor = 'pointer';
+
+    editButton.addEventListener('click', () => {
+      window.location.href = `/post/edit/?id=${listing.id}`;
+    });
+
+    contentContainer.appendChild(editButton);
+  } else {
+    console.log('User is not the seller. No Edit button displayed.');
+  }
+
+  contentContainer.append(title, sellerInfo);
+
   const mainImageContainer = document.createElement('div');
   mainImageContainer.className =
     'relative w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg';
 
-  // Opprett en wrapper for bilder
   const imageWrapper = document.createElement('div');
   imageWrapper.className = 'flex transition-transform duration-500 ease-in-out';
 
-  // Iterer gjennom bildene og legg dem til i wrapperen
   listing.media?.forEach((mediaItem) => {
     const image = document.createElement('img');
     image.src = mediaItem?.url || 'placeholder.png';
@@ -70,23 +89,21 @@ const displayListingDetails = async () => {
   });
   mainImageContainer.appendChild(imageWrapper);
 
-  // Opprett navigasjonsknapper
   const prevButton = document.createElement('button');
   prevButton.className =
     'absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full hover:bg-opacity-75';
-  prevButton.innerHTML = '&#8249;'; // Venstre pil
+  prevButton.innerHTML = '&#8249;';
   prevButton.addEventListener('click', () => navigateSlide(-1));
 
   const nextButton = document.createElement('button');
   nextButton.className =
     'absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full hover:bg-opacity-75';
-  nextButton.innerHTML = '&#8250;'; // Høyre pil
+  nextButton.innerHTML = '&#8250;';
   nextButton.addEventListener('click', () => navigateSlide(1));
 
   mainImageContainer.appendChild(prevButton);
   mainImageContainer.appendChild(nextButton);
 
-  // Opprett dots for bildeindikasjon
   const dotsContainer = document.createElement('div');
   dotsContainer.className =
     'absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2';
@@ -102,10 +119,6 @@ const displayListingDetails = async () => {
   });
   mainImageContainer.appendChild(dotsContainer);
 
-  // Legg containeren til siden
-  document.getElementById('listingDetails').appendChild(mainImageContainer);
-
-  // JavaScript for å håndtere karuselllogikk
   let currentSlide = 0;
   const totalSlides = listing.media?.length || 0;
 
@@ -132,7 +145,6 @@ const displayListingDetails = async () => {
     });
   };
 
-  // Initial oppdatering
   updateCarousel();
 
   const infoSection = document.createElement('div');
@@ -141,9 +153,9 @@ const displayListingDetails = async () => {
   infoSection.style.lineHeight = '1.5';
   infoSection.style.marginBottom = '20px';
 
-  if (listing.endDate) {
+  if (listing.endsAt) {
     const endDateSection = document.createElement('div');
-    const formattedDate = new Date(listing.endDate).toLocaleString();
+    const formattedDate = new Date(listing.endsAt).toLocaleString();
     endDateSection.innerHTML = `<h3>Bid Ends:</h3><p>${formattedDate}</p>`;
     endDateSection.style.marginBottom = '20px';
     infoSection.appendChild(endDateSection);
@@ -174,7 +186,7 @@ const displayListingDetails = async () => {
       bidderInfo.style.gap = '10px';
 
       const bidderAvatar = document.createElement('img');
-      bidderAvatar.src = bid.bidder?.avatar.url || 'default-avatar.png';
+      bidderAvatar.src = bid.bidder?.avatar?.url || 'default-avatar.png';
       bidderAvatar.alt = 'Bidder Avatar';
       bidderAvatar.style.width = '40px';
       bidderAvatar.style.height = '40px';
