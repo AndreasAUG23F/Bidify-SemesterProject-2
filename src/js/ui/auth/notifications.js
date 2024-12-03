@@ -1,7 +1,5 @@
-import { NOTIFICATIONS } from '../../api/constants';
+/* import { NOTIFICATIONS } from '../../api/constants';
 
-/* import { NOTIFICATIONS } from '../constants.js';
- */
 export const createNotificationBell = () => {
   const notificationBell = document.createElement('div');
   notificationBell.className = 'relative cursor-pointer mr-4';
@@ -54,49 +52,49 @@ export const createNotificationBell = () => {
       notificationBadge.textContent = '0';
       notificationBadge.classList.add('hidden');
     }
-    updateDropdown(notifications); // Oppdater dropdown
+    updateDropdown(notifications);
   };
+
+
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem('token'); // Hent token fra lokal lagring
+      const token = localStorage.getItem('token');
       if (!token) {
-        console.warn('User is not logged in');
+        console.warn('No token found in localStorage!');
         return;
       }
 
+      console.log('Using token:', token);
       const response = await fetch(NOTIFICATIONS, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Bruk token for autentisering
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch notifications: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      updateNotifications(data.count, data.notifications); // Oppdater UI med data fra API-et
+      console.log('Notifications fetched successfully:', data);
+      updateNotifications(data.count, data.notifications);
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('Error fetching notifications:', error.message || error);
     }
   };
 
-  // Hent varsler hvert 30. sekund
   setInterval(fetchNotifications, 30000);
 
-  // Initialiser varsler når bjellen opprettes
   fetchNotifications();
 
-  // Vis/skjul dropdown ved klikk
   let isDropdownVisible = false;
   notificationBell.addEventListener('click', () => {
     isDropdownVisible = !isDropdownVisible;
     dropdownMenu.classList.toggle('hidden', !isDropdownVisible);
   });
 
-  // Lukk dropdown når du klikker utenfor
   document.addEventListener('click', (event) => {
     if (!notificationBell.contains(event.target)) {
       isDropdownVisible = false;
@@ -106,3 +104,4 @@ export const createNotificationBell = () => {
 
   return notificationBell;
 };
+ */

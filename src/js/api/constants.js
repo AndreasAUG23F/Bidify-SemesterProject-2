@@ -17,9 +17,3 @@ export const AUCTION_PROFILES = `${AUCTION}/profiles`;
 export const AUCTION_LISTINGS = `${AUCTION}/listings`;
 
 export const SEARCH = `${AUCTION_LISTINGS}/search`;
-
-/*testing*/
-
-export const NOTIFICATIONS = `${API_BASE}/notifications`;
-
-export const PROFILE_NOTIFICATIONS = `${AUCTION_PROFILES}/notifications`;

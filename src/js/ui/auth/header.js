@@ -1,5 +1,4 @@
-/* import { setLogoutListener } from '../global/logout';
-import { createNotificationBell } from './notifications';
+import { setLogoutListener } from '../global/logout';
 
 export const makeHeader = () => {
   const header = document.querySelector('header');
@@ -139,8 +138,8 @@ export const makeHeader = () => {
 
   setLogoutListener();
 };
- */
 
+/* 
 import { setLogoutListener } from '../global/logout';
 import { createNotificationBell } from './notifications';
 
@@ -247,17 +246,16 @@ export const makeHeader = () => {
   iconDiv.appendChild(menuToggle);
   iconDiv.appendChild(largeScreenSearch);
 
-  // Legg til notifikasjonsbjellen
-  const notificationBell = createNotificationBell();
+  /*   const notificationBell = createNotificationBell();
   iconDiv.appendChild(notificationBell);
+ 
 
-  // Fullfør header-oppbygging
   nav.appendChild(logoLink);
   nav.appendChild(navLinksDiv);
   nav.appendChild(iconDiv);
   header.appendChild(nav);
 
-  // Media query for responsivt design
+  
   const mediaQuery = window.matchMedia('(max-width: 768px)');
   const handleMediaChange = (e) => {
     if (e.matches) {
@@ -280,6 +278,6 @@ export const makeHeader = () => {
   mediaQuery.addEventListener('change', handleMediaChange);
   handleMediaChange(mediaQuery);
 
-  // Legg til logout-listener
   setLogoutListener();
 };
+ */
