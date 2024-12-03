@@ -20,7 +20,7 @@ export const initCarousel = async (carouselSelector) => {
       const slide = document.createElement('div');
       slide.className = `carousel-slide ${
         index === 0 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
-      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden transition-all duration-700 ease-in-out`;
+      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden transition-all duration-700 ease-in-out group`;
       slide.style.position = 'absolute';
 
       const image = document.createElement('img');
