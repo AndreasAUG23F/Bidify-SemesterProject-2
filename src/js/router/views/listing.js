@@ -53,7 +53,7 @@ const displayListingDetails = async () => {
 
   if (loggedInUser?.name === listing.seller?.name) {
     const editButton = document.createElement('button');
-    editButton.innerText = 'Edit Listing';
+    editButton.innerText = 'Edit';
     editButton.style.padding = '10px 20px';
     editButton.style.marginTop = '10px';
     editButton.style.backgroundColor = '#007BFF';
