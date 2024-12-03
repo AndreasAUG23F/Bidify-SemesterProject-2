@@ -1,11 +1,52 @@
 import { createListing } from '../../api/listing/create';
 
+const previewTitle = document.getElementById('previewTitle');
+const previewDescription = document.getElementById('previewDescription');
+const previewExpiry = document.getElementById('previewExpiry');
+const previewImages = document.getElementById('previewImages');
+
+function updatePreview() {
+  const formData = new FormData(document.forms.createListing);
+
+  previewTitle.textContent = formData.get('title') || 'Listing Title';
+  previewDescription.textContent =
+    formData.get('description') || 'Listing Description';
+  previewExpiry.textContent = formData.get('expiryDate')
+    ? `Ends At: ${new Date(formData.get('expiryDate')).toLocaleDateString()}`
+    : 'Expiry Date not set';
+
+  const mediaInputs = document.querySelectorAll('input[name="mediaUrl[]"]');
+  previewImages.innerHTML = '';
+  Array.from(mediaInputs).forEach((input) => {
+    const url = input.value.trim();
+    if (url) {
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Preview Image';
+      img.classList.add('w-24', 'h-24', 'object-cover', 'rounded');
+      previewImages.appendChild(img);
+    }
+  });
+}
+
+document.forms.createListing.addEventListener('input', updatePreview);
+document
+  .getElementById('mediaUrlContainer')
+  .addEventListener('click', (event) => {
+    if (event.target.classList.contains('remove-url')) {
+      const inputWrapper = event.target.closest('.media-url-item');
+      if (inputWrapper) {
+        inputWrapper.remove();
+      }
+      setTimeout(updatePreview, 0);
+    }
+  });
 document.getElementById('addMediaUrl').addEventListener('click', () => {
   const container = document.getElementById('mediaUrlContainer');
-  const mediaInputs = container.querySelectorAll('input[name="mediaUrl[]"]');
+  const currentMediaInputs = container.querySelectorAll('.media-url-item');
 
-  if (mediaInputs.length >= 8) {
-    alert('You can only add up to 8 image URLs.');
+  if (currentMediaInputs.length >= 8) {
+    alert('You can only add up to 8 images.');
     return;
   }
 
@@ -26,26 +67,16 @@ document.getElementById('addMediaUrl').addEventListener('click', () => {
   container.appendChild(newInput);
 });
 
-document
-  .getElementById('mediaUrlContainer')
-  .addEventListener('click', (event) => {
-    if (event.target.classList.contains('remove-url')) {
-      const inputWrapper = event.target.closest('.media-url-item');
-      inputWrapper.remove();
-    }
-  });
-
 export async function onCreateListing(event) {
   event.preventDefault();
 
   const formData = new FormData(event.target);
 
-  // Collect all media URLs from dynamically created inputs
   const mediaInputs = document.querySelectorAll('input[name="mediaUrl[]"]');
   const media = Array.from(mediaInputs)
     .map((input) => input.value.trim())
-    .filter((url) => url) // Remove empty inputs
-    .slice(0, 8) // Ensure no more than 8 URLs are submitted
+    .filter((url) => url)
+    .slice(0, 8)
     .map((url) => ({ url, alt: '' }));
 
   const createData = {
@@ -77,33 +108,3 @@ export async function onCreateListing(event) {
     console.error('Error during creation:', error);
   }
 }
-
-// import { createListing } from '../../api/listing/create';
-
-// /**
-//  * Handles the create listing form submission.
-//  *
-//  * @param {Event} event - The event object representing the form submission.
-//  */
-// export async function onCreateListing(event) {
-//   event.preventDefault();
-
-//   const formData = new FormData(event.target);
-
-//   // Collect image URLs as an array of strings
-//   const imageUrls = formData.get('mediaUrl')
-//     ? formData
-//         .get('mediaUrl')
-//         .split(',')
-//         .map((url) => url.trim())
-//     : [];
-
-//   const listingData = {
-//     title: formData.get('title'),
-//     description: formData.get('description'),
-//     expiryDate: formData.get('expiryDate'),
-//     images: imageUrls, // Pass image URLs as an array
-//   };
-
-//   await createListing(listingData);
-// }
