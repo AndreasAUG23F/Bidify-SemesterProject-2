@@ -42,7 +42,7 @@ export async function readListings(limit = 12, page = 1, tag) {
 
     if (!response.ok) {
       throw new Error(
-        `Error! Didnt manage to fetch listings: ${response.status}`
+        `Error! Did not manage to fetch listings: ${response.status}`
       );
     }
 
