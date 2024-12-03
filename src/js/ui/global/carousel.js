@@ -19,9 +19,9 @@ export const initCarousel = async (carouselSelector) => {
     listings.forEach((listing, index) => {
       const slide = document.createElement('div');
       slide.className = `carousel-slide ${
-        index === 0 ? 'block' : 'hidden'
-      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden group`;
-      slide.style.position = 'relative';
+        index === 0 ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+      } w-full h-[300px] sm:h-[400px] lg:h-[500px] rounded-lg relative overflow-hidden transition-all duration-700 ease-in-out`;
+      slide.style.position = 'absolute';
 
       const image = document.createElement('img');
       image.className =
@@ -90,8 +90,17 @@ export const initCarousel = async (carouselSelector) => {
 
     const updatePosition = () => {
       slides.forEach((slide, index) => {
-        slide.classList.toggle('hidden', index !== currentSlide);
-        slide.classList.toggle('block', index === currentSlide);
+        slide.classList.remove('opacity-100', 'translate-x-0');
+        slide.classList.remove('opacity-0', 'translate-x-full');
+        slide.classList.remove('opacity-0', '-translate-x-full');
+
+        if (index === currentSlide) {
+          slide.classList.add('opacity-100', 'translate-x-0');
+        } else if (index < currentSlide) {
+          slide.classList.add('opacity-0', '-translate-x-full');
+        } else {
+          slide.classList.add('opacity-0', 'translate-x-full');
+        }
       });
       updateDots();
     };
