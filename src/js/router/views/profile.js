@@ -1,7 +1,11 @@
 import { setLogoutListener } from '../../ui/global/logout';
 import { readProfile, readUserBids } from '../../api/profile/read';
+import { onUpdateProfile } from '../../ui/profile/update';
 
 setLogoutListener();
+
+const form = document.getElementById('updateProfile');
+form.addEventListener('submit', onUpdateProfile);
 
 const userData = JSON.parse(localStorage.getItem('userData'));
 const username = userData.name;
@@ -36,6 +40,11 @@ export const renderProfilePage = async () => {
   updateProfileButton.innerText = 'Update Profile';
   updateProfileButton.className =
     'mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
+  const updateProfileDiv = document.getElementById('updateProfileDiv');
+  updateProfileButton.addEventListener('click', () => {
+    console.log('update', updateProfileDiv);
+    updateProfileDiv.classList.remove('hidden');
+  });
 
   profileContainer.append(
     avatar,

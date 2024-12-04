@@ -1,39 +1,21 @@
-/**
- * Updates the user's profile with the given avatar and banner.
- *
- * @param {string} username - The username of the profile to update.
- * @param {Object} profileData - The data to update the profile with.
- * @param {string} profileData.avatar - The new avatar URL for the profile.
- * @param {string} profileData.banner - The new banner URL for the profile.
- * @returns {Promise<Object|null>} A promise that resolves to the updated profile data if the update is successful, or null if an error occurs.
- */
-/* 
-export async function updateProfile(username, { avatar, banner }) {
-  const profileBody = {
-    avatar: avatar,
-    banner: banner,
+import { updateProfile } from '../../api/profile/update';
+
+export const onUpdateProfile = async (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  const username = userData.name;
+  const avatar = {
+    url: formData.get('avatar'),
+    alt: 'User Avatar',
   };
 
-  console.log('request body', profileBody);
+  const banner = {
+    url: formData.get('banner'),
+    alt: 'User Banner',
+  };
 
-  try {
-    const response = await fetch(AUCTION_PROFILES + '/' + username, {
-      method: 'PUT',
-      headers: headers(),
-      body: JSON.stringify(profileBody),
-    });
+  const bio = formData.get('bio');
 
-    console.log('Request Payload', JSON.stringify(profileBody, null, 2));
-    console.log('Response', response);
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Profile updated', data);
-      window.location.href = '/profile/';
-      return data;
-    }
-  } catch (error) {
-    console.error('An error occurred', error);
-  }
-}
- */
+  updateProfile(username, avatar, banner, bio);
+};

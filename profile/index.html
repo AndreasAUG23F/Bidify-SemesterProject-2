@@ -13,7 +13,44 @@
   <body>
     <header></header>
 
-    <main class="px-4 py-8">
+    <main>
+      <div id="updateProfileDiv" class="hidden w-full h-full z-50">
+        <div
+          class="absolute w-full h-dvh bg-black/50 flex items-center justify-center"
+        >
+          <form id="updateProfile">
+            <div class="flex flex-col items-center space-y-4">
+              <input
+                type="url"
+                id="avatar"
+                name="avatar"
+                placeholder="Insert new image URL"
+                class="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="url"
+                id="banner"
+                name="banner"
+                placeholder="Insert new cover image URL"
+                class="border border-gray-300 rounded-md p-2"
+              />
+              <input
+                type="text"
+                id="bio"
+                name="bio"
+                placeholder="Write quick bio"
+                class="border border-gray-300 rounded-md p-2"
+              />
+              <button
+                type="submit"
+                class="bg-blue-500 text-white rounded-md p-2"
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
       <div
         id="outerContainer"
         class="flex flex-col items-center space-y-4 mb-12"
