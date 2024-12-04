@@ -62,7 +62,7 @@ export const renderProfilePage = async () => {
         'flex items-center space-x-4 bg-white shadow-md p-4 rounded-lg';
 
       const auctionImage = document.createElement('img');
-      auctionImage.src = auction.image || '/images/default-product.png';
+      auctionImage.src = auction.media[0].url || '/images/default-product.png';
       auctionImage.alt = auction.title;
       auctionImage.className = 'w-24 h-24 rounded-lg object-cover';
 
