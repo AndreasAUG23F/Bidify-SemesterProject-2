@@ -41,7 +41,7 @@ export const makeHeader = () => {
     createListingLink.textContent = 'Create Listing';
 
     const profileLink = document.createElement('a');
-    profileLink.href = '/profile';
+    profileLink.href = '/profile/';
     profileLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     profileLink.textContent = 'Profile';
 
