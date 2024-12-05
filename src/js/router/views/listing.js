@@ -67,8 +67,6 @@ const displayListingDetails = async () => {
     });
 
     contentContainer.appendChild(editButton);
-  } else {
-    console.log('User is not the seller. No Edit button displayed.');
   }
 
   contentContainer.append(title, sellerInfo);

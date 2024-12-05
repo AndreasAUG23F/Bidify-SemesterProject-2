@@ -1,3 +1,6 @@
+import { authGuard } from '../../utilities/authGuard';
+
+authGuard();
 // import { AUCTION_LISTINGS } from '../../api/constants';
 // import { headers } from '../../api/header';
 
