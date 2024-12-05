@@ -9,9 +9,9 @@ export const onBid = async (event) => {
 
   const bidAmount = formData.get('bidAmount');
 
-  const listingData = JSON.parse(localStorage.getItem('listingData'));
+  const listingId = JSON.parse(localStorage.getItem('listingId'));
 
-  const id = listingData.id;
+  const id = listingId.id;
 
   const amount = Number(bidAmount);
 

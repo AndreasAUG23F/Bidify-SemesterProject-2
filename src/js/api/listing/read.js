@@ -1,14 +1,19 @@
 import { AUCTION_LISTINGS } from '../constants';
 import { headers } from '../header';
 
-export async function readListing(id) {
+export async function readListing() {
+  const id = new URLSearchParams(window.location.search).get('id');
   try {
-    const response = await fetch(`${AUCTION_LISTINGS}/${id}?seller=true`, {
-      method: 'GET',
-      headers: headers(),
-    });
+    const response = await fetch(
+      `${AUCTION_LISTINGS}/${id}?_seller=true&_bids=true`,
+      {
+        method: 'GET',
+        headers: headers(),
+      }
+    );
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       return data;
     } else {
       console.error('Failed to fetch post:', response.status);
