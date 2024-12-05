@@ -35,7 +35,7 @@ export const makeFooter = () => {
 
   if (loggedIn) {
     const profileLink = document.createElement('a');
-    profileLink.href = '/profile';
+    profileLink.href = '/profile/';
     profileLink.className = 'hover:text-blue-500';
     profileLink.textContent = 'Profile';
 
