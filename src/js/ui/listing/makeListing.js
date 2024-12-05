@@ -59,7 +59,7 @@ export const displayListings = (listings) => {
       'bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors';
     viewButton.addEventListener('click', async () => {
       window.location.href = `/post/?id=${listing.id}`;
-      //localStorage.setItem("listingId", JSON.stringify(listing.id));
+      localStorage.setItem('listingId', JSON.stringify(listing.id));
     });
 
     container.append(image, title, description, currentBid, viewButton);

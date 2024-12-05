@@ -10,8 +10,6 @@ export async function createListing(title, description, endsAt, tags, media) {
     media,
   };
 
-  console.log('Request payload:', body);
-
   try {
     const response = await fetch(AUCTION_LISTINGS, {
       method: 'POST',

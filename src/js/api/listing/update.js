@@ -1,3 +1,44 @@
+import { AUCTION_LISTINGS } from '../constants';
+import { headers } from '../header';
+
+export async function updateListing(
+  listingId,
+  { title, description, media, expiryDate }
+) {
+  try {
+    const response = await fetch(`${AUCTION_LISTINGS}/${listingId}`, {
+      method: 'PUT',
+      headers: {
+        ...headers(),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        media,
+        expiryDate,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      const errorData = await response.json();
+      console.error(
+        'Failed to update the listing:',
+        response.status,
+        response.statusText,
+        errorData
+      );
+      throw new Error(`Error ${response.status}: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error updating the listing:', error);
+    throw error;
+  }
+}
+
 // export async function updateProfile(username, { avatar, banner }) {
 //     const profileBody = {
 //       avatar: avatar,
