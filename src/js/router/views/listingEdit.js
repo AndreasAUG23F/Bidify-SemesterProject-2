@@ -16,13 +16,22 @@ async function loadListing() {
 
   try {
     const listing = await readListing();
+
     if (listing && listing.data) {
-      editForm.title.value = listing.data.title || '';
-      editForm.description.value = listing.data.description || '';
-      editForm.expiryDate.value = listing.data.expiryDate || '';
+      const { title, description, endsAt, media } = listing.data;
+
+      editForm.title.value = title || '';
+      editForm.description.value = description || '';
+
+      const expiryDate = endsAt
+        ? new Date(endsAt).toISOString().split('T')[0]
+        : '';
+      editForm.expiryDate.value = expiryDate;
 
       const mediaContainer = document.getElementById('mediaUrlContainer');
-      listing.data.media?.forEach((url) => {
+      mediaContainer.innerHTML = ''; // Clear existing URLs
+
+      (media || []).forEach((item) => {
         const mediaField = document.createElement('div');
         mediaField.className = 'media-url-item flex items-center space-x-2';
         mediaField.innerHTML = `
@@ -31,7 +40,7 @@ async function loadListing() {
             name="mediaUrl[]"
             placeholder="https://example.com/image.jpg"
             class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
-            value="${url}"
+            value="${item.url || ''}"
           />
           <button
             type="button"
