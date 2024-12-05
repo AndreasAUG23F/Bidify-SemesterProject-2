@@ -31,6 +31,10 @@ export const renderProfilePage = async () => {
   nameElement.innerText = username;
   nameElement.className = 'text-xl font-semibold mt-4';
 
+  const bioElement = document.createElement('p');
+  bioElement.innerText = userProfile.bio;
+  bioElement.className = 'text-gray-500 mt-2';
+
   const coinsElement = document.createElement('div');
   coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
   coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.credits || 0}</span>
@@ -49,6 +53,7 @@ export const renderProfilePage = async () => {
   profileContainer.append(
     avatar,
     nameElement,
+    bioElement,
     coinsElement,
     updateProfileButton
   );

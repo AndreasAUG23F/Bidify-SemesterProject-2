@@ -1,3 +1,4 @@
+import { AUCTION_PROFILES } from '../constants';
 import { headers } from '../header';
 
 export const updateProfile = async (username, avatar, banner, bio) => {
@@ -10,16 +11,14 @@ export const updateProfile = async (username, avatar, banner, bio) => {
   console.log('body', body);
 
   try {
-    const response = await fetch(
-      `https://v2.api.noroff.dev/auction/profiles/Andypandy321`,
-      {
-        method: 'PUT',
-        header: headers(),
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(`${AUCTION_PROFILES}/${username}`, {
+      method: 'PUT',
+      headers: headers(),
+      body: JSON.stringify(body),
+    });
     if (response.ok) {
       const data = await response.json();
+      window.location.href = '/profile/';
       return data.data;
     }
   } catch (error) {
