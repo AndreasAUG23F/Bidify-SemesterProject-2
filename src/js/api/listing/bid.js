@@ -2,8 +2,6 @@ import { AUCTION_LISTINGS } from '../constants';
 import { headers } from '../header';
 
 export const fetchBid = async (bidAmount, id) => {
-  /* const queryParameter = '?_seller=true&_bids=true'; */
-
   const body = {
     amount: bidAmount,
   };
