@@ -61,19 +61,17 @@ function displayLoggedOutContent() {
 }
 
 const searchInput = document.getElementById('searchInput');
-const clearSearch = document.getElementById('clearSearch'); // Legg til referanse til krysset
+const clearSearch = document.getElementById('clearSearch');
 const resultsContainer = document.getElementById('postResults');
 
-// Skjul resultatcontaineren som standard
 resultsContainer.classList.add('hidden');
 
 let allListings = [];
 
-// Fetch all listings når siden laster
 const fetchListings = async () => {
   try {
-    allListings = await readListings(50); // Hent opp til 50 innlegg
-    renderListings([]); // Ingen resultater vises ved start
+    allListings = await readListings(50);
+    renderListings([]);
   } catch (error) {
     console.error('Error fetching listings:', error);
     resultsContainer.innerHTML =
@@ -138,23 +136,20 @@ const filterListings = (query) => {
   const filteredListings = allListings.filter((listing) =>
     listing.title.toLowerCase().includes(query.toLowerCase())
   );
-  renderListings(filteredListings, query); // Send med query for å kontrollere "No results found"
+  renderListings(filteredListings, query);
 };
 
-// Event listener for søkefelt
 searchInput.addEventListener('input', (e) => {
   const query = e.target.value.trim();
   filterListings(query);
 
-  // Vis eller skjul krysset basert på innhold i søkefeltet
   clearSearch.style.display = query ? 'block' : 'none';
 });
 
-// Event listener for krysset
 clearSearch.addEventListener('click', () => {
-  searchInput.value = ''; // Tømmer søkefeltet
-  clearSearch.style.display = 'none'; // Skjul krysset
-  renderListings([]); // Tilbakestiller resultatene
+  searchInput.value = '';
+  clearSearch.style.display = 'none';
+  renderListings([]);
 });
 
 async function runPage() {
