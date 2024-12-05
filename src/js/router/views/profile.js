@@ -20,25 +20,39 @@ export const renderProfilePage = async () => {
   console.log(userProfile);
 
   const profileContainer = document.createElement('div');
-  profileContainer.className = 'flex flex-col items-center py-12';
+  profileContainer.className = 'flex flex-col items-center w-full';
 
+  const bannerContainer = document.createElement('div');
+  bannerContainer.className = 'relative w-full h-52';
+  const banner = document.createElement('img');
+  banner.src = userProfile.banner?.url || 'default-banner.png';
+  banner.alt = 'User Banner';
+  banner.className = 'w-full h-full object-cover';
+  bannerContainer.appendChild(banner);
+
+  const avatarContainer = document.createElement('div');
+  avatarContainer.className =
+    'absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32';
   const avatar = document.createElement('img');
-  avatar.src = userProfile.avatar.url;
+  avatar.src = userProfile.avatar?.url || 'default-avatar.png';
   avatar.alt = 'User Avatar';
-  avatar.className = 'w-40 h-40 rounded-full shadow-lg object-cover';
+  avatar.className =
+    'w-full h-full rounded-full border-4 border-white shadow-lg object-cover';
+  avatarContainer.appendChild(avatar);
+  bannerContainer.appendChild(avatarContainer);
 
   const nameElement = document.createElement('h2');
   nameElement.innerText = username;
-  nameElement.className = 'text-xl font-semibold mt-4';
+  nameElement.className = 'text-xl font-semibold mt-16 text-center';
 
   const bioElement = document.createElement('p');
-  bioElement.innerText = userProfile.bio;
-  bioElement.className = 'text-gray-500 mt-2';
+  bioElement.innerText = userProfile.bio || 'No bio available.';
+  bioElement.className = 'text-gray-500 mt-2 text-center';
 
   const coinsElement = document.createElement('div');
   coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
   coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.credits || 0}</span>
-                             <i class="fa-solid fa-coins text-yellow-500"></i>`;
+                          <i class="fa-solid fa-coins text-yellow-500"></i>`;
 
   const updateProfileButton = document.createElement('button');
   updateProfileButton.innerText = 'Update Profile';
@@ -51,7 +65,7 @@ export const renderProfilePage = async () => {
   });
 
   profileContainer.append(
-    avatar,
+    bannerContainer,
     nameElement,
     bioElement,
     coinsElement,
