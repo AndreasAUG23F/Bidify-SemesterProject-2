@@ -1,3 +1,5 @@
+import { onBid } from '../../ui/listing/bid';
+
 const displayListingDetails = async () => {
   const listingContainer = document.getElementById('listingDetails');
 
@@ -170,6 +172,9 @@ const displayListingDetails = async () => {
   const sortedBids = listing.bids?.sort((a, b) => b.amount - a.amount) || [];
   const topBids = sortedBids.slice(0, 4);
 
+  console.log('topBids', topBids);
+  console.log('listing', listing);
+
   if (topBids.length > 0) {
     topBids.forEach((bid) => {
       const listItem = document.createElement('li');
@@ -211,13 +216,14 @@ const displayListingDetails = async () => {
 
   bidsSection.appendChild(bidList);
 
-  const bidForm = document.createElement('div');
+  const bidForm = document.createElement('form');
   bidForm.style.display = 'flex';
   bidForm.style.justifyContent = 'center';
   bidForm.style.alignItems = 'center';
   bidForm.style.marginTop = '20px';
 
   const bidInput = document.createElement('input');
+  bidInput.name = 'bidAmount';
   bidInput.type = 'number';
   bidInput.placeholder = 'Enter bid';
   bidInput.style.marginRight = '10px';
@@ -234,17 +240,6 @@ const displayListingDetails = async () => {
   bidButton.style.borderRadius = '4px';
   bidButton.style.cursor = 'pointer';
 
-  bidButton.addEventListener('click', () => {
-    const bidValue = parseFloat(bidInput.value);
-    if (isNaN(bidValue) || bidValue <= 0) {
-      alert('Please enter a valid bid amount.');
-      return;
-    }
-
-    alert(`Bid of ${bidValue} USD placed!`);
-    bidInput.value = '';
-  });
-
   bidForm.append(bidInput, bidButton);
 
   contentContainer.append(
@@ -257,6 +252,7 @@ const displayListingDetails = async () => {
   );
 
   listingContainer.appendChild(contentContainer);
+  bidForm.addEventListener('submit', onBid);
 };
 
 displayListingDetails();
