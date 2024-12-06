@@ -3,19 +3,19 @@ export async function renderListingDetails(listingData) {
   const listing = listingData.data;
   const loggedInUser = JSON.parse(localStorage.getItem('userData'));
   container.innerHTML = '';
-  // Title
+
   const title = document.createElement('div');
   title.textContent = listing.title || 'Product Name';
   title.style.fontSize = '32px';
   title.style.fontWeight = 'bold';
   title.style.marginBottom = '20px';
-  // Description
+
   const description = document.createElement('div');
   description.textContent = listing.description || 'No description available.';
   description.style.fontSize = '16px';
   description.style.lineHeight = '1.5';
   description.style.marginBottom = '20px';
-  // Media
+
   const media = document.createElement('div');
   media.style.display = 'flex';
   media.style.flexDirection = 'column';
@@ -36,12 +36,13 @@ export async function renderListingDetails(listingData) {
       media.appendChild(img);
     });
   }
-  // Seller Info
+
   const sellerInfo = document.createElement('div');
   sellerInfo.style.display = 'flex';
   sellerInfo.style.alignItems = 'center';
   sellerInfo.style.marginBottom = '20px';
   sellerInfo.style.gap = '10px';
+
   const sellerAvatar = document.createElement('div');
   const avatarImg = document.createElement('img');
   avatarImg.src = listing.seller.avatar?.url || 'default-avatar.png';
@@ -51,23 +52,26 @@ export async function renderListingDetails(listingData) {
   avatarImg.style.borderRadius = '50%';
   avatarImg.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
   sellerAvatar.appendChild(avatarImg);
+
   const sellerDetails = document.createElement('div');
   const sellerName = document.createElement('div');
   sellerName.textContent = listing.seller.name || 'Unknown Seller';
   sellerName.style.fontSize = '16px';
   sellerName.style.fontWeight = 'bold';
   sellerName.style.color = '#333';
+
   const sellerEmail = document.createElement('div');
   sellerEmail.textContent = listing.seller.email || '';
   sellerEmail.style.fontSize = '14px';
   sellerEmail.style.color = '#555';
+
   const sellerBio = document.createElement('div');
   sellerBio.textContent = listing.seller.bio || '';
   sellerBio.style.fontStyle = 'italic';
   sellerBio.style.color = '#555';
   sellerDetails.append(sellerName, sellerEmail, sellerBio);
   sellerInfo.append(sellerAvatar, sellerDetails);
-  // Edit Button
+
   if (loggedInUser?.name === listing.seller.name) {
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';

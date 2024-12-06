@@ -29,7 +29,7 @@ async function loadListing() {
       editForm.expiryDate.value = expiryDate;
 
       const mediaContainer = document.getElementById('mediaUrlContainer');
-      mediaContainer.innerHTML = ''; // Clear existing URLs
+      mediaContainer.innerHTML = '';
 
       (media || []).forEach((item, index) => {
         const mediaField = document.createElement('div');

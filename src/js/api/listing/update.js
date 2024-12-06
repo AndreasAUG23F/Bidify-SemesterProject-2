@@ -29,7 +29,7 @@ export async function updateListing(
     }
 
     const data = await response.json();
-    alert('Post successfully updated');
+    alert('Listing successfully updated');
     return data;
   } catch (error) {
     console.error('Failed to update the listing', error);
