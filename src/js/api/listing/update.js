@@ -3,67 +3,36 @@ import { headers } from '../header';
 
 export async function updateListing(
   listingId,
-  { title, description, media, expiryDate }
+  { title, description, endsAt, tags, media }
 ) {
+  const body = {
+    title,
+    description,
+    endsAt,
+    tags,
+    media,
+  };
+
   try {
     const response = await fetch(`${AUCTION_LISTINGS}/${listingId}`, {
       method: 'PUT',
-      headers: {
-        ...headers(),
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        media,
-        expiryDate,
-      }),
+      headers: headers(),
+      body: JSON.stringify(body),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.json();
+    if (!response.ok) {
       console.error(
-        'Failed to update the listing:',
-        response.status,
-        response.statusText,
-        errorData
+        'Update failed. Server responded with:',
+        response.statusText
       );
-      throw new Error(`Error ${response.status}: ${errorData.message}`);
+      return null;
     }
+
+    const data = await response.json();
+    alert('Post successfully updated');
+    return data;
   } catch (error) {
-    console.error('Error updating the listing:', error);
-    throw error;
+    console.error('Failed to update the listing', error);
+    return null;
   }
 }
-
-// export async function updateProfile(username, { avatar, banner }) {
-//     const profileBody = {
-//       avatar: avatar,
-//       banner: banner,
-//     };
-
-//     console.log("request body", profileBody);
-
-//     try {
-//       const response = await fetch(API_SOCIAL_PROFILES + "/" + username, {
-//         method: "PUT",
-//         headers: headers(),
-//         body: JSON.stringify(profileBody),
-//       });
-
-//       console.log("Request Payload", JSON.stringify(profileBody, null, 2));
-//       console.log("Response", response);
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         console.log("Profile updated", data);
-//         window.location.href = "/profile/";
-//         return data;
-//       }
-//     } catch (error) {
-//       console.error("An error occurred", error);
-//     }
-//   }

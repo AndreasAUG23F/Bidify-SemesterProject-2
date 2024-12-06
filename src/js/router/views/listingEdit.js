@@ -15,7 +15,7 @@ async function loadListing() {
   }
 
   try {
-    const listing = await readListing();
+    const listing = await readListing(listingId);
 
     if (listing && listing.data) {
       const { title, description, endsAt, media } = listing.data;
@@ -31,23 +31,30 @@ async function loadListing() {
       const mediaContainer = document.getElementById('mediaUrlContainer');
       mediaContainer.innerHTML = ''; // Clear existing URLs
 
-      (media || []).forEach((item) => {
+      (media || []).forEach((item, index) => {
         const mediaField = document.createElement('div');
         mediaField.className = 'media-url-item flex items-center space-x-2';
         mediaField.innerHTML = `
-          <input
-            type="text"
-            name="mediaUrl[]"
-            placeholder="https://example.com/image.jpg"
-            class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
-            value="${item.url || ''}"
-          />
-          <button
-            type="button"
-            class="remove-url bg-red-500 text-white rounded-full px-3"
-          >
-            -
-          </button>`;
+                    <input
+                        type="text"
+                        name="mediaUrl[]"
+                        placeholder="https://example.com/image.jpg"
+                        class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
+                        value="${item.url || ''}"
+                    />
+                    <input
+                        type="text"
+                        name="alt${index + 1}"
+                        placeholder="Alt text"
+                        class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
+                        value="${item.alt || ''}"
+                    />
+                    <button
+                        type="button"
+                        class="remove-url bg-red-500 text-white rounded-full px-3"
+                    >
+                        -
+                    </button>`;
         mediaContainer.appendChild(mediaField);
       });
 
@@ -55,18 +62,24 @@ async function loadListing() {
         const mediaField = document.createElement('div');
         mediaField.className = 'media-url-item flex items-center space-x-2';
         mediaField.innerHTML = `
-          <input
-            type="text"
-            name="mediaUrl[]"
-            placeholder="https://example.com/image.jpg"
-            class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
-          />
-          <button
-            type="button"
-            class="remove-url bg-red-500 text-white rounded-full px-3"
-          >
-            -
-          </button>`;
+                    <input
+                        type="text"
+                        name="mediaUrl[]"
+                        placeholder="https://example.com/image.jpg"
+                        class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
+                    />
+                    <input
+                        type="text"
+                        name="alt"
+                        placeholder="Alt text"
+                        class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100"
+                    />
+                    <button
+                        type="button"
+                        class="remove-url bg-red-500 text-white rounded-full px-3"
+                    >
+                        -
+                    </button>`;
         mediaContainer.appendChild(mediaField);
       });
 
@@ -90,68 +103,3 @@ async function loadListing() {
 }
 
 loadListing();
-
-// import { AUCTION_LISTINGS } from '../../api/constants';
-// import { headers } from '../../api/header';
-
-// const loadListingForEdit = async () => {
-//   const params = new URLSearchParams(window.location.search);
-//   const listingId = params.get('id');
-
-//   if (!listingId) {
-//     alert('No listing ID provided.');
-//     return;
-//   }
-
-//   try {
-//     const response = await fetch(`${AUCTION_LISTINGS}/${listingId}`, {
-//       method: 'GET',
-//       headers: headers(),
-//     });
-
-//     if (!response.ok) {
-//       throw new Error('Failed to fetch listing for edit');
-//     }
-
-//     const listing = await response.json();
-
-//     document.getElementById('title').value = listing.title || '';
-//     document.getElementById('description').value = listing.description || '';
-//     // Populate other fields as needed
-//   } catch (error) {
-//     console.error('Error loading listing for edit:', error);
-//   }
-// };
-
-// const saveEditedListing = async () => {
-//   const params = new URLSearchParams(window.location.search);
-//   const listingId = params.get('id');
-
-//   const updatedListing = {
-//     title: document.getElementById('title').value,
-//     description: document.getElementById('description').value,
-//     // Include other fields as necessary
-//   };
-
-//   try {
-//     const response = await fetch(`${AUCTION_LISTINGS}/${listingId}`, {
-//       method: 'PUT',
-//       headers: headers(),
-//       body: JSON.stringify(updatedListing),
-//     });
-
-//     if (response.ok) {
-//       alert('Listing updated successfully!');
-//       window.location.href = `/listing.html?id=${listingId}`;
-//     } else {
-//       throw new Error('Failed to update listing');
-//     }
-//   } catch (error) {
-//     console.error('Error updating listing:', error);
-//   }
-// };
-
-// document.addEventListener('DOMContentLoaded', loadListingForEdit);
-// document
-//   .getElementById('saveButton')
-//   .addEventListener('click', saveEditedListing);

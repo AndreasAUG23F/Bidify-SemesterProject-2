@@ -3,23 +3,39 @@ import { updateListing } from '../../api/listing/update';
 export async function onUpdateListing(event, listingId) {
   event.preventDefault();
 
-  const title = event.target.title.value;
-  const description = event.target.description.value;
-  const expiryDate = event.target.expiryDate.value;
-  const media = Array.from(
-    event.target.querySelectorAll('input[name="mediaUrl[]"]')
-  ).map((input) => input.value);
+  const formData = new FormData(event.target);
 
-  try {
-    const updatedListing = await updateListing(listingId, {
-      title,
-      description,
-      expiryDate,
-      media,
-    });
-    console.log('Listing updated successfully:', updatedListing);
-    window.location.href = `/post/view/?id=${listingId}`;
-  } catch (error) {
-    console.error('Error while updating listing:', error);
+  const media = [];
+  const existingMediaInputs = formData.getAll('mediaUrl[]');
+  existingMediaInputs.forEach((url, index) => {
+    if (url) {
+      media.push({
+        url,
+        alt: formData.get(`alt${index + 1}`) || '',
+      });
+    }
+  });
+
+  const editInfo = {
+    title: formData.get('title') || undefined,
+    description: formData.get('description') || undefined,
+    endsAt: formData.get('expiryDate')
+      ? new Date(formData.get('expiryDate')).toISOString()
+      : undefined,
+    tags: formData.get('tags')
+      ? formData
+          .get('tags')
+          .split(',')
+          .map((tag) => tag.trim())
+      : undefined,
+    media: media.length > 0 ? media : undefined,
+  };
+
+  const updatedListing = await updateListing(listingId, editInfo);
+
+  if (updatedListing) {
+    window.location.href = `/post/?id=${listingId}`;
+  } else {
+    alert('Update failed. Your listing remains unchanged.');
   }
 }
