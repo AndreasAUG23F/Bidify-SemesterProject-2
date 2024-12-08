@@ -1,3 +1,5 @@
+import { initCarousel } from '../global/carousel';
+
 export async function renderListingDetails(listingData) {
   const container = document.getElementById('listingDetails');
   const listing = listingData.data;
@@ -89,6 +91,8 @@ export async function renderListingDetails(listingData) {
   }
   container.append(title, description, media, sellerInfo);
 }
+
+initCarousel();
 
 // export async function renderListingDetails(listingData) {
 //   const container = document.getElementById('listingDetails');
