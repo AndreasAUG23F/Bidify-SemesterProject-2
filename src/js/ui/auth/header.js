@@ -148,7 +148,8 @@ export const makeHeader = () => {
   header.innerHTML = '';
 
   const nav = document.createElement('nav');
-  nav.className = 'flex items-center justify-between px-6 py-4';
+  nav.className =
+    'flex flex-col md:flex-row items-center justify-between px-6 py-4';
 
   // Logo
   const logoLink = document.createElement('a');
@@ -166,7 +167,7 @@ export const makeHeader = () => {
   // Navigasjonslenker
   const navLinksDiv = document.createElement('div');
   navLinksDiv.className =
-    'flex justify-center flex-grow space-x-8 text-lg md:text-xl mx-8';
+    'hidden md:flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 text-lg md:text-xl';
 
   const homeLink = document.createElement('a');
   homeLink.href = '/';
@@ -190,6 +191,24 @@ export const makeHeader = () => {
 
     navLinksDiv.appendChild(createListingLink);
     navLinksDiv.appendChild(profileLink);
+
+    const logoutButton = document.createElement('button');
+    logoutButton.id = 'logoutButton';
+    logoutButton.className = `
+     bg-red-500
+     text-white
+     font-medium
+      py-2
+     px-4
+     rounded-lg
+     transform
+     transition
+     duration-300
+     hover:scale-105
+     hover:bg-red-600
+     `;
+    logoutButton.textContent = 'Logout';
+    navLinksDiv.appendChild(logoutButton);
   } else {
     const registerLink = document.createElement('a');
     registerLink.href = '/auth/register/';
@@ -205,40 +224,34 @@ export const makeHeader = () => {
     navLinksDiv.appendChild(loginLink);
   }
 
-  // Logout-knappen
-  const logoutButton = document.createElement('button');
-  logoutButton.id = 'logoutButton';
-  logoutButton.className = `
-    bg-red-500
-    text-white
-    font-medium
-    py-2
-    px-4
-    rounded-lg
-    transform
-    transition
-    duration-300
-    hover:scale-105
-    hover:bg-red-600
-  `;
-  logoutButton.textContent = 'Logout';
-  logoutButton.style.marginLeft = 'auto';
-
-  if (loggedIn) {
-    logoutButton.addEventListener('click', () => {
-      localStorage.removeItem('token');
-      window.location.href = '/auth/login/';
-    });
-  } else {
-    logoutButton.classList.add('hidden');
-  }
+  // Hamburgermeny for små skjermer
+  const menuToggle = document.createElement('button');
+  menuToggle.className = 'block md:hidden text-gray-700 hover:text-gray-900';
+  menuToggle.innerHTML = '<i class="fa-solid fa-bars text-2xl"></i>';
+  menuToggle.addEventListener('click', () => {
+    navLinksDiv.classList.toggle('hidden');
+    navLinksDiv.classList.toggle('flex');
+  });
 
   // Fullfør nav-strukturen
-  nav.appendChild(logoLink); // Logo til venstre
-  nav.appendChild(navLinksDiv); // Lenker midtstilt
-  nav.appendChild(logoutButton); // Logout-knapp til høyre
-
+  nav.appendChild(logoLink);
+  nav.appendChild(navLinksDiv);
+  nav.appendChild(menuToggle); // Legger til hamburgermeny
   header.appendChild(nav);
+
+  const mediaQuery = window.matchMedia('(max-width: 768px)');
+  const handleMediaChange = (e) => {
+    if (e.matches) {
+      navLinksDiv.classList.add('hidden');
+      navLinksDiv.classList.remove('flex');
+    } else {
+      navLinksDiv.classList.remove('hidden');
+      navLinksDiv.classList.add('flex');
+    }
+  };
+
+  mediaQuery.addEventListener('change', handleMediaChange);
+  handleMediaChange(mediaQuery);
 
   setLogoutListener();
 };
