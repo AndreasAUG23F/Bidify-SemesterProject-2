@@ -3,12 +3,11 @@ import { headers } from '../header';
 
 export async function updateListing(
   listingId,
-  { title, description, endsAt, tags, media }
+  { title, description, tags, media }
 ) {
   const body = {
     title,
     description,
-    endsAt,
     tags,
     media,
   };

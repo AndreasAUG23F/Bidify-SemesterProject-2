@@ -18,15 +18,11 @@ async function loadListing() {
     const listing = await readListing(listingId);
 
     if (listing && listing.data) {
-      const { title, description, endsAt, media } = listing.data;
+      const { title, description, media, tags } = listing.data;
 
       editForm.title.value = title || '';
       editForm.description.value = description || '';
-
-      const expiryDate = endsAt
-        ? new Date(endsAt).toISOString().split('T')[0]
-        : '';
-      editForm.expiryDate.value = expiryDate;
+      editForm.tags.value = (tags || []).join(', ');
 
       const mediaContainer = document.getElementById('mediaUrlContainer');
       mediaContainer.innerHTML = '';
