@@ -176,6 +176,57 @@ export async function renderListingDetails(listingData) {
       window.location.href = `/post/edit/?id=${listing.id}`;
     });
   }
+
+  // Bud-segment
+  const bidsContainer = document.createElement('div');
+  bidsContainer.className = 'bids-container mt-8';
+
+  const bidsTitle = document.createElement('h2');
+  bidsTitle.textContent = 'Bids';
+  bidsTitle.className = 'text-lg font-semibold mb-4';
+
+  const bidsList = document.createElement('ul');
+  bidsList.className = 'bids-list space-y-2';
+
+  if (listing.bids?.length > 0) {
+    listing.bids.forEach((bid) => {
+      const bidItem = document.createElement('li');
+      bidItem.className =
+        'flex justify-between items-center p-2 bg-gray-100 rounded-lg';
+
+      const bidderInfo = document.createElement('div');
+      bidderInfo.className = 'flex items-center gap-3';
+
+      const bidderAvatar = document.createElement('img');
+      bidderAvatar.src =
+        bid.bidder?.avatar?.url || 'https://via.placeholder.com/40';
+      bidderAvatar.alt = 'Bidder Avatar';
+      bidderAvatar.className = 'w-8 h-8 rounded-full object-cover';
+
+      const bidderName = document.createElement('span');
+      bidderName.textContent = bid.bidder?.name || 'Anonymous';
+      bidderName.className = 'font-medium';
+
+      bidderInfo.append(bidderAvatar, bidderName);
+
+      const bidAmount = document.createElement('span');
+      bidAmount.textContent = `${bid.amount} USD`;
+      bidAmount.className = 'text-blue-600 font-semibold';
+
+      bidItem.append(bidderInfo, bidAmount);
+      bidsList.appendChild(bidItem);
+    });
+  } else {
+    const noBidsMessage = document.createElement('p');
+    noBidsMessage.textContent = 'No bids yet.';
+    noBidsMessage.className = 'text-gray-500';
+    bidsContainer.appendChild(noBidsMessage);
+  }
+
+  bidsContainer.append(bidsTitle, bidsList);
+
+  // Append til #listingDetails
+  document.getElementById('listingDetails').appendChild(bidsContainer);
 }
 
 // export async function renderListingDetails(listingData) {
