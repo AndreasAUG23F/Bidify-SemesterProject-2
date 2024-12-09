@@ -222,6 +222,7 @@ export async function renderListingDetails(listingData) {
 
   const bidForm = document.createElement('form');
   bidForm.className = 'flex items-center gap-4 mt-4';
+  bidForm.id = 'bidForm';
 
   const bidInput = document.createElement('input');
   bidInput.type = 'number';
