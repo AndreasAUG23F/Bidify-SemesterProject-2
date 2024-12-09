@@ -1,6 +1,4 @@
-import { initCarousel } from '../global/carousel';
-
-export async function renderListingDetails(listingData) {
+/* export async function renderListingDetails(listingData) {
   const container = document.getElementById('listingDetails');
   const listing = listingData.data;
   const loggedInUser = JSON.parse(localStorage.getItem('userData'));
@@ -92,7 +90,93 @@ export async function renderListingDetails(listingData) {
   container.append(title, description, media, sellerInfo);
 }
 
-initCarousel();
+ */
+
+export async function renderListingDetails(listingData) {
+  const listing = listingData.data;
+  const loggedInUser = JSON.parse(localStorage.getItem('userData'));
+
+  // Tittel
+  const titleElement = document.querySelector('#listingDetails .title');
+  titleElement.textContent = listing.title || 'Product Name';
+
+  // Selgerinfo
+  const sellerAvatar = document.querySelector('#listingDetails .seller-avatar');
+  sellerAvatar.src = listing.seller?.avatar?.url || 'default-avatar.png';
+  sellerAvatar.alt = listing.seller?.avatar?.alt || 'Seller Avatar';
+
+  const sellerName = document.querySelector('#listingDetails .seller-name');
+  sellerName.textContent = listing.seller?.name || 'Unknown Seller';
+
+  const sellerEmail = document.querySelector('#listingDetails .seller-email');
+  sellerEmail.textContent = listing.seller?.email || '';
+
+  // Beskrivelse
+  const descriptionElement = document.querySelector(
+    '#listingDetails .description'
+  );
+  descriptionElement.textContent =
+    listing.description || 'No description available.';
+
+  // Bildekarusell
+  const carouselContainer = document.querySelector('#carouselContainer');
+  const dotsContainer = document.querySelector('.dot-container');
+  carouselContainer.innerHTML = '';
+  dotsContainer.innerHTML = '';
+
+  listing.media?.forEach((mediaItem, index) => {
+    const slide = document.createElement('img');
+    slide.src = mediaItem.url;
+    slide.alt = mediaItem.alt || `Image ${index + 1}`;
+    slide.className = `carousel-slide ${
+      index === 0 ? 'block' : 'hidden'
+    } w-full h-full object-cover rounded-lg`;
+
+    carouselContainer.appendChild(slide);
+
+    const dot = document.createElement('span');
+    dot.className = `dot ${
+      index === 0 ? 'bg-gray-600' : 'bg-gray-300'
+    } h-3 w-3 rounded-full cursor-pointer transition hover:bg-gray-400`;
+    dot.addEventListener('click', () => updateCarousel(index));
+    dotsContainer.appendChild(dot);
+  });
+
+  let currentSlide = 0;
+
+  function updateCarousel(index) {
+    currentSlide = index;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.dot');
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('block', i === index);
+      slide.classList.toggle('hidden', i !== index);
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('bg-gray-600', i === index);
+      dot.classList.toggle('bg-gray-300', i !== index);
+    });
+  }
+
+  document.querySelector('.prev-button2').addEventListener('click', () => {
+    currentSlide =
+      (currentSlide - 1 + listing.media.length) % listing.media.length;
+    updateCarousel(currentSlide);
+  });
+
+  document.querySelector('.next-button2').addEventListener('click', () => {
+    currentSlide = (currentSlide + 1) % listing.media.length;
+    updateCarousel(currentSlide);
+  });
+
+  const editButton = document.querySelector('#listingDetails .edit-button');
+  if (loggedInUser?.name === listing.seller.name) {
+    editButton.classList.remove('hidden');
+    editButton.addEventListener('click', () => {
+      window.location.href = `/post/edit/?id=${listing.id}`;
+    });
+  }
+}
 
 // export async function renderListingDetails(listingData) {
 //   const container = document.getElementById('listingDetails');
