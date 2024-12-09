@@ -92,15 +92,15 @@
 
  */
 
+import { fetchBid } from '../../api/listing/bid';
+
 export async function renderListingDetails(listingData) {
   const listing = listingData.data;
   const loggedInUser = JSON.parse(localStorage.getItem('userData'));
 
-  // Tittel
   const titleElement = document.querySelector('#listingDetails .title');
   titleElement.textContent = listing.title || 'Product Name';
 
-  // Selgerinfo
   const sellerAvatar = document.querySelector('#listingDetails .seller-avatar');
   sellerAvatar.src = listing.seller?.avatar?.url || 'default-avatar.png';
   sellerAvatar.alt = listing.seller?.avatar?.alt || 'Seller Avatar';
@@ -111,14 +111,12 @@ export async function renderListingDetails(listingData) {
   const sellerEmail = document.querySelector('#listingDetails .seller-email');
   sellerEmail.textContent = listing.seller?.email || '';
 
-  // Beskrivelse
   const descriptionElement = document.querySelector(
     '#listingDetails .description'
   );
   descriptionElement.textContent =
     listing.description || 'No description available.';
 
-  // Bildekarusell
   const carouselContainer = document.querySelector('#carouselContainer');
   const dotsContainer = document.querySelector('.dot-container');
   carouselContainer.innerHTML = '';
@@ -177,7 +175,6 @@ export async function renderListingDetails(listingData) {
     });
   }
 
-  // Bud-segment
   const bidsContainer = document.createElement('div');
   bidsContainer.className = 'bids-container mt-8';
 
@@ -223,219 +220,33 @@ export async function renderListingDetails(listingData) {
     bidsContainer.appendChild(noBidsMessage);
   }
 
-  bidsContainer.append(bidsTitle, bidsList);
+  const bidForm = document.createElement('form');
+  bidForm.className = 'flex items-center gap-4 mt-4';
 
-  // Append til #listingDetails
+  const bidInput = document.createElement('input');
+  bidInput.type = 'number';
+  bidInput.placeholder = 'Enter bid';
+  bidInput.className =
+    'border border-gray-300 rounded-lg p-2 flex-1 focus:ring focus:ring-blue-300 outline-none';
+
+  const bidButton = document.createElement('button');
+  bidButton.textContent = 'Place bid';
+  bidButton.className =
+    'bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700';
+  bidButton.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const bidAmount = bidInput.value;
+
+    if (!bidAmount || isNaN(bidAmount) || Number(bidAmount) <= 0) {
+      alert('Please enter a valid bid amount.');
+      return;
+    }
+
+    fetchBid(bidAmount, listing.id);
+  });
+
+  bidForm.append(bidInput, bidButton);
+  bidsContainer.append(bidsTitle, bidsList, bidForm);
+
   document.getElementById('listingDetails').appendChild(bidsContainer);
 }
-
-// export async function renderListingDetails(listingData) {
-//   const container = document.getElementById('listingDetails');
-//   const listing = listingData.data;
-
-//   container.innerHTML = '';
-
-//   const wrapper = document.createElement('div');
-//   wrapper.className = 'flex flex-col items-center gap-8 p-6';
-
-//   const title = document.createElement('h1');
-//   title.textContent = listing.title || 'Product Name';
-//   title.className = 'text-4xl font-bold text-center';
-
-//   const sellerInfo = document.createElement('div');
-//   sellerInfo.className = 'flex items-center gap-4';
-
-//   const sellerAvatar = document.createElement('img');
-//   sellerAvatar.src = listing.seller?.avatar?.url || 'default-avatar.png';
-//   sellerAvatar.alt = listing.seller?.avatar?.alt || 'Seller Avatar';
-//   sellerAvatar.className = 'w-16 h-16 rounded-full object-cover';
-
-//   const sellerName = document.createElement('span');
-//   sellerName.textContent = listing.seller?.name || 'Unknown Seller';
-//   sellerName.className = 'text-lg font-semibold';
-
-//   sellerInfo.append(sellerAvatar, sellerName);
-
-//   const mainImageContainer = document.createElement('div');
-//   mainImageContainer.className =
-//     'relative w-full max-w-2xl mx-auto overflow-hidden rounded-lg shadow-lg bg-gray-800';
-
-//   const imageWrapper = document.createElement('div');
-//   imageWrapper.className = 'flex transition-transform duration-500 ease-in-out';
-
-//   const dotsContainer = document.createElement('div');
-//   dotsContainer.className =
-//     'absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2';
-
-//   let currentSlide = 0;
-
-//   listing.media?.forEach((mediaItem, index) => {
-//     const image = document.createElement('img');
-//     image.src = mediaItem?.url || 'placeholder.png';
-//     image.alt = mediaItem?.alt || 'Product Image';
-//     image.className = 'w-full h-auto object-cover flex-shrink-0';
-//     imageWrapper.appendChild(image);
-
-//     const dot = document.createElement('div');
-//     dot.className =
-//       'w-3 h-3 bg-gray-400 rounded-full hover:bg-gray-600 cursor-pointer transition duration-300';
-//     dot.addEventListener('click', () => {
-//       currentSlide = index;
-//       updateCarousel();
-//     });
-//     dotsContainer.appendChild(dot);
-//   });
-
-//   const prevButton = document.createElement('button');
-//   prevButton.className =
-//     'absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full hover:bg-opacity-75';
-//   prevButton.innerHTML = '&#8249;';
-//   prevButton.addEventListener('click', () => navigateSlide(-1));
-
-//   const nextButton = document.createElement('button');
-//   nextButton.className =
-//     'absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full hover:bg-opacity-75';
-//   nextButton.innerHTML = '&#8250;';
-//   nextButton.addEventListener('click', () => navigateSlide(1));
-
-//   mainImageContainer.appendChild(imageWrapper);
-//   mainImageContainer.appendChild(prevButton);
-//   mainImageContainer.appendChild(nextButton);
-//   mainImageContainer.appendChild(dotsContainer);
-
-//   const updateCarousel = () => {
-//     imageWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-//     const dots = dotsContainer.querySelectorAll('div');
-//     dots.forEach((dot, index) => {
-//       dot.className =
-//         index === currentSlide
-//           ? 'w-3 h-3 bg-gray-800 rounded-full cursor-pointer'
-//           : 'w-3 h-3 bg-gray-400 rounded-full cursor-pointer';
-//     });
-//   };
-
-//   const navigateSlide = (direction) => {
-//     currentSlide =
-//       (currentSlide + direction + listing.media.length) % listing.media.length;
-//     updateCarousel();
-//   };
-
-//   updateCarousel();
-
-//   const infoAndBids = document.createElement('div');
-//   infoAndBids.className =
-//     'flex flex-col lg:flex-row justify-between gap-8 w-full max-w-4xl';
-
-//   const infoSection = document.createElement('div');
-//   infoSection.className = 'flex-1';
-
-//   const infoTitle = document.createElement('h2');
-//   infoTitle.textContent = 'Info';
-//   infoTitle.className = 'text-2xl font-bold mb-4';
-
-//   const description = document.createElement('p');
-//   description.textContent = listing.description || 'No description available.';
-//   description.className = 'text-base text-gray-700 leading-relaxed';
-
-//   infoSection.append(infoTitle, description);
-
-//   const bidsSection = document.createElement('div');
-//   bidsSection.className = 'flex-1';
-
-//   const bidsTitle = document.createElement('h2');
-//   bidsTitle.textContent = 'Last Bids';
-//   bidsTitle.className = 'text-2xl font-bold mb-4';
-
-//   const endDate = document.createElement('p');
-//   endDate.textContent = `Ends: ${new Date(listing.endsAt).toLocaleDateString()}`;
-//   endDate.className = 'text-base text-gray-600 mb-4';
-
-//   const bidList = document.createElement('ul');
-//   bidList.className = 'list-none space-y-2';
-
-//   const sortedBids = listing.bids?.sort((a, b) => b.amount - a.amount) || [];
-//   const topBids = sortedBids.slice(0, 4);
-
-//   if (topBids.length > 0) {
-//     topBids.forEach((bid) => {
-//       const listItem = document.createElement('li');
-//       listItem.className = 'flex justify-between items-center';
-
-//       const bidderInfo = document.createElement('div');
-//       bidderInfo.className = 'flex items-center gap-2';
-
-//       const bidderAvatar = document.createElement('img');
-//       bidderAvatar.src = bid.bidder?.avatar?.url || 'default-avatar.png';
-//       bidderAvatar.alt = 'Bidder Avatar';
-//       bidderAvatar.className = 'w-8 h-8 rounded-full';
-
-//       const bidderName = document.createElement('span');
-//       bidderName.textContent = bid.bidder?.name || 'Anonymous';
-//       bidderName.className = 'font-semibold text-gray-800';
-
-//       bidderInfo.append(bidderAvatar, bidderName);
-
-//       const bidAmount = document.createElement('span');
-//       bidAmount.textContent = `${bid.amount} USD`;
-//       bidAmount.className = 'text-blue-600 font-semibold';
-
-//       listItem.append(bidderInfo, bidAmount);
-//       bidList.appendChild(listItem);
-//     });
-//   } else {
-//     const noBids = document.createElement('p');
-//     noBids.textContent = 'No bids yet.';
-//     noBids.className = 'text-base text-gray-600';
-//     bidsSection.appendChild(noBids);
-//   }
-
-//   const bidForm = document.createElement('form');
-//   bidForm.className = 'flex items-center gap-4 mt-4';
-
-//   bidForm.addEventListener('submit', (e) => {
-//     e.preventDefault();
-
-//     const bidAmount = bidInput.value; // Hent budbeløpet fra input-feltet
-
-//     if (!bidAmount || isNaN(bidAmount) || Number(bidAmount) <= 0) {
-//       alert('Please enter a valid bid amount.');
-//       return;
-//     }
-
-//     if (!listing.id) {
-//       alert('Listing ID is missing. Please refresh the page.');
-//       return;
-//     }
-
-//     /* fetchBid(bidAmount, listing.id); */
-//   });
-
-//   const bidInput = document.createElement('input');
-//   bidInput.type = 'number';
-//   bidInput.placeholder = 'Enter bid';
-//   bidInput.className =
-//     'border border-gray-300 rounded-lg p-2 flex-1 focus:ring focus:ring-blue-300 outline-none';
-
-//   const bidButton = document.createElement('button');
-//   bidButton.textContent = 'Place bid';
-//   bidButton.className =
-//     'bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700';
-//   bidButton.addEventListener('click', async (event) => {
-//     window.location.reload();
-//     event.preventDefault();
-//     const bidAmount = bidInput.value;
-//     if (!bidAmount) {
-//       return;
-//     }
-//     /* await fetchBid(bidAmount, listing.id); */
-//   });
-
-//   bidForm.append(bidInput, bidButton);
-
-//   bidsSection.append(bidsTitle, endDate, bidList, bidForm);
-
-//   infoAndBids.append(infoSection, bidsSection);
-//   wrapper.append(title, sellerInfo, mainImageContainer, infoAndBids);
-
-//   container.appendChild(wrapper);
-// }
