@@ -5,31 +5,50 @@ const previewDescription = document.getElementById('previewDescription');
 const previewExpiry = document.getElementById('previewExpiry');
 const previewImages = document.getElementById('previewImages');
 
+const previewTags = document.createElement('p');
+previewTags.id = 'previewTags';
+previewTags.className = 'text-sm text-gray-500';
+document.getElementById('previewContent').appendChild(previewTags);
+
 function updatePreview() {
   const formData = new FormData(document.forms.createListing);
 
   previewTitle.textContent = formData.get('title') || 'Listing Title';
+
   previewDescription.textContent =
     formData.get('description') || 'Listing Description';
+
   previewExpiry.textContent = formData.get('expiryDate')
     ? `Ends At: ${new Date(formData.get('expiryDate')).toLocaleDateString()}`
     : 'Expiry Date not set';
 
-  const mediaInputs = document.querySelectorAll('input[name="mediaUrl[]"]');
+  const mediaItems = document.querySelectorAll('.media-url-item');
   previewImages.innerHTML = '';
-  Array.from(mediaInputs).forEach((input) => {
-    const url = input.value.trim();
+  Array.from(mediaItems).forEach((item) => {
+    const urlInput = item.querySelector('input[name="mediaUrl[]"]');
+    const altInput = item.querySelector('input[name="altText[]"]');
+    const url = urlInput ? urlInput.value.trim() : '';
+    const alt = altInput ? altInput.value.trim() : '';
     if (url) {
       const img = document.createElement('img');
       img.src = url;
-      img.alt = 'Preview Image';
+      img.alt = alt || 'Preview Image';
       img.classList.add('w-24', 'h-24', 'object-cover', 'rounded');
       previewImages.appendChild(img);
     }
   });
+
+  const tags = formData.get('tags') || '';
+  previewTags.textContent = tags
+    ? `Tags: ${tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .join(', ')}`
+    : 'No tags set';
 }
 
 document.forms.createListing.addEventListener('input', updatePreview);
+
 document
   .getElementById('mediaUrlContainer')
   .addEventListener('click', (event) => {
@@ -41,6 +60,7 @@ document
       setTimeout(updatePreview, 0);
     }
   });
+
 document.getElementById('addMediaUrl').addEventListener('click', () => {
   const container = document.getElementById('mediaUrlContainer');
   const currentMediaInputs = container.querySelectorAll('.media-url-item');
@@ -61,6 +81,12 @@ document.getElementById('addMediaUrl').addEventListener('click', () => {
       class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       required
     />
+    <input
+      type="text"
+      name="altText[]"
+      placeholder="Alt text for the image"
+      class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    />
     <button type="button" class="remove-url bg-red-500 text-white rounded-full px-3">-</button>
   `;
 
@@ -72,12 +98,19 @@ export async function onCreateListing(event) {
 
   const formData = new FormData(event.target);
 
-  const mediaInputs = document.querySelectorAll('input[name="mediaUrl[]"]');
-  const media = Array.from(mediaInputs)
-    .map((input) => input.value.trim())
-    .filter((url) => url)
-    .slice(0, 8)
-    .map((url) => ({ url, alt: '' }));
+  const mediaItems = document.querySelectorAll('.media-url-item');
+  const media = Array.from(mediaItems)
+    .map((item) => {
+      const urlInput = item.querySelector('input[name="mediaUrl[]"]');
+      const altInput = item.querySelector('input[name="altText[]"]');
+      const url = urlInput ? urlInput.value.trim() : '';
+      const alt = altInput ? altInput.value.trim() : '';
+      if (url) {
+        return { url, alt };
+      }
+      return null;
+    })
+    .filter((mediaItem) => mediaItem !== null);
 
   const createData = {
     title: formData.get('title'),
@@ -85,7 +118,12 @@ export async function onCreateListing(event) {
     endsAt: formData.get('expiryDate')
       ? new Date(formData.get('expiryDate')).toISOString()
       : null,
-    tags: [],
+    tags: formData.get('tags')
+      ? formData
+          .get('tags')
+          .split(',')
+          .map((tag) => tag.trim())
+      : [],
     media,
   };
 

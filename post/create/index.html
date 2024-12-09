@@ -47,6 +47,19 @@
           </div>
 
           <div>
+            <label for="tags" class="block text-left text-gray-600 mb-1">
+              Tags
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              placeholder="Tags"
+              class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
             <input
               type="date"
               name="expiryDate"
@@ -66,6 +79,12 @@
                   class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
                 />
+                <input
+                  type="text"
+                  name="altText[]"
+                  placeholder="Alt text for the image"
+                  class="w-full px-4 py-3 rounded-full border border-gray-300 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
                 <button
                   type="button"
                   class="remove-url bg-red-500 text-white rounded-full px-3"
@@ -74,6 +93,7 @@
                 </button>
               </div>
             </div>
+
             <button
               type="button"
               id="addMediaUrl"
