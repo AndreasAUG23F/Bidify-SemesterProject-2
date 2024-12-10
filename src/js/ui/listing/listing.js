@@ -1,97 +1,3 @@
-/* export async function renderListingDetails(listingData) {
-  const container = document.getElementById('listingDetails');
-  const listing = listingData.data;
-  const loggedInUser = JSON.parse(localStorage.getItem('userData'));
-  container.innerHTML = '';
-
-  const title = document.createElement('div');
-  title.textContent = listing.title || 'Product Name';
-  title.style.fontSize = '32px';
-  title.style.fontWeight = 'bold';
-  title.style.marginBottom = '20px';
-
-  const description = document.createElement('div');
-  description.textContent = listing.description || 'No description available.';
-  description.style.fontSize = '16px';
-  description.style.lineHeight = '1.5';
-  description.style.marginBottom = '20px';
-
-  const media = document.createElement('div');
-  media.style.display = 'flex';
-  media.style.flexDirection = 'column';
-  media.style.alignItems = 'center';
-  media.style.marginBottom = '20px';
-  if (listing.media && listing.media.length > 0) {
-    listing.media.forEach((item) => {
-      const img = document.createElement('img');
-      img.src = item.url;
-      img.alt = item.alt || 'Product Image';
-      img.style.width = '100%';
-      img.style.maxWidth = '800px';
-      img.style.height = 'auto';
-      img.style.objectFit = 'cover';
-      img.style.borderRadius = '8px';
-      img.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-      img.style.marginBottom = '10px';
-      media.appendChild(img);
-    });
-  }
-
-  const sellerInfo = document.createElement('div');
-  sellerInfo.style.display = 'flex';
-  sellerInfo.style.alignItems = 'center';
-  sellerInfo.style.marginBottom = '20px';
-  sellerInfo.style.gap = '10px';
-
-  const sellerAvatar = document.createElement('div');
-  const avatarImg = document.createElement('img');
-  avatarImg.src = listing.seller.avatar?.url || 'default-avatar.png';
-  avatarImg.alt = listing.seller.avatar?.alt || 'Seller Avatar';
-  avatarImg.style.width = '60px';
-  avatarImg.style.height = '60px';
-  avatarImg.style.borderRadius = '50%';
-  avatarImg.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-  sellerAvatar.appendChild(avatarImg);
-
-  const sellerDetails = document.createElement('div');
-  const sellerName = document.createElement('div');
-  sellerName.textContent = listing.seller.name || 'Unknown Seller';
-  sellerName.style.fontSize = '16px';
-  sellerName.style.fontWeight = 'bold';
-  sellerName.style.color = '#333';
-
-  const sellerEmail = document.createElement('div');
-  sellerEmail.textContent = listing.seller.email || '';
-  sellerEmail.style.fontSize = '14px';
-  sellerEmail.style.color = '#555';
-
-  const sellerBio = document.createElement('div');
-  sellerBio.textContent = listing.seller.bio || '';
-  sellerBio.style.fontStyle = 'italic';
-  sellerBio.style.color = '#555';
-  sellerDetails.append(sellerName, sellerEmail, sellerBio);
-  sellerInfo.append(sellerAvatar, sellerDetails);
-
-  if (loggedInUser?.name === listing.seller.name) {
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.style.padding = '10px 20px';
-    editButton.style.backgroundColor = '#007BFF';
-    editButton.style.color = '#fff';
-    editButton.style.border = 'none';
-    editButton.style.borderRadius = '4px';
-    editButton.style.cursor = 'pointer';
-    editButton.style.marginTop = '10px';
-    editButton.addEventListener('click', () => {
-      window.location.href = `/post/edit/?id=${listing.id}`;
-    });
-    container.appendChild(editButton);
-  }
-  container.append(title, description, media, sellerInfo);
-}
-
- */
-
 import { fetchBid } from '../../api/listing/bid';
 
 export async function renderListingDetails(listingData) {
@@ -234,12 +140,30 @@ export async function renderListingDetails(listingData) {
   bidButton.textContent = 'Place bid';
   bidButton.className =
     'bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700';
+
   bidButton.addEventListener('click', async (event) => {
     event.preventDefault();
-    const bidAmount = bidInput.value;
 
-    if (!bidAmount || isNaN(bidAmount) || Number(bidAmount) <= 0) {
+    const loggedInUser = JSON.parse(localStorage.getItem('userData'));
+    if (!loggedInUser) {
+      alert('You need to log in to place a bid.');
+      return;
+    }
+
+    const bidAmount = Number(bidInput.value);
+
+    if (!bidAmount || isNaN(bidAmount) || bidAmount <= 0) {
       alert('Please enter a valid bid amount.');
+      return;
+    }
+
+    const highestBid =
+      listing.bids?.reduce((max, bid) => Math.max(max, bid.amount), 0) || 0;
+
+    if (bidAmount <= highestBid) {
+      alert(
+        `Your bid must be higher than the current highest bid of ${highestBid} USD.`
+      );
       return;
     }
 
