@@ -13,51 +13,53 @@
   </head>
   <body>
     <header></header>
+    <main>
+      <div id="listingDetails" class="max-w-4xl mx-auto p-6">
+        <h1 class="title text-3xl font-bold text-center mb-6"></h1>
 
-    <div id="listingDetails" class="max-w-4xl mx-auto p-6">
-      <h1 class="title text-3xl font-bold text-center mb-6"></h1>
-
-      <div class="flex items-center justify-center gap-4 mb-6">
-        <img
-          class="seller-avatar w-12 h-12 rounded-full object-cover shadow"
-          src=""
-          alt="Seller Avatar"
-        />
-        <div>
-          <p class="seller-name font-semibold text-lg"></p>
-          <p class="seller-email text-sm text-gray-500"></p>
+        <div class="relative bg-white rounded-lg shadow-lg">
+          <div
+            id="carouselContainer"
+            class="h-[300px] sm:h-[400px] lg:h-[500px] overflow-hidden"
+          ></div>
+          <div class="absolute inset-0 flex justify-between items-center px-4">
+            <button
+              class="prev-button2 text-black text-2xl bg-white bg-opacity-70 p-3 rounded-full hover:bg-gray-200 transition"
+            >
+              &#10094;
+            </button>
+            <button
+              class="next-button2 text-black text-2xl bg-white bg-opacity-70 p-3 rounded-full hover:bg-gray-200 transition"
+            >
+              &#10095;
+            </button>
+          </div>
+          <div class="dot-container flex justify-center space-x-2 py-4"></div>
         </div>
-      </div>
 
-      <div class="relative bg-white rounded-lg shadow-lg">
         <div
-          id="carouselContainer"
-          class="h-[300px] sm:h-[400px] lg:h-[500px] overflow-hidden"
-        ></div>
-        <div class="absolute inset-0 flex justify-between items-center px-4">
-          <button
-            class="prev-button2 text-black text-2xl bg-white bg-opacity-70 p-3 rounded-full hover:bg-gray-200 transition"
-          >
-            &#10094;
-          </button>
-          <button
-            class="next-button2 text-black text-2xl bg-white bg-opacity-70 p-3 rounded-full hover:bg-gray-200 transition"
-          >
-            &#10095;
-          </button>
+          class="flex flex-col items-center gap-4 mt-6 sm:flex-row sm:items-center sm:justify-start"
+        >
+          <img
+            class="seller-avatar w-12 h-12 rounded-full object-cover shadow"
+            src=""
+            alt="Seller Avatar"
+          />
+          <div class="text-center sm:text-left">
+            <p class="seller-name font-semibold text-lg"></p>
+            <p class="seller-email text-sm text-gray-500"></p>
+          </div>
         </div>
-        <div class="dot-container flex justify-center space-x-2 py-4"></div>
+
+        <p class="description mt-6 text-center text-gray-700"></p>
+
+        <button
+          class="edit-button mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 hidden"
+        >
+          Edit Listing
+        </button>
       </div>
-
-      <p class="description mt-6 text-center text-gray-700"></p>
-
-      <button
-        class="edit-button mt-6 bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 hidden"
-      >
-        Edit Listing
-      </button>
-    </div>
-
+    </main>
     <footer></footer>
   </body>
 </html>
