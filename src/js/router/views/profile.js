@@ -73,6 +73,14 @@ export const renderProfilePage = async () => {
   );
   outerContainer.appendChild(profileContainer);
 
+  // Adding close functionality
+  const closeProfileButton = document.getElementById('closeProfileButton');
+  if (closeProfileButton) {
+    closeProfileButton.addEventListener('click', () => {
+      updateProfileDiv.classList.add('hidden');
+    });
+  }
+
   const auctionsSection = document.createElement('div');
   auctionsSection.className = 'px-6 md:px-16 lg:px-32 mt-12';
   auctionsSection.innerHTML =
