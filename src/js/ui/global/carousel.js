@@ -119,7 +119,6 @@ export const initCarousel = async (carouselSelector) => {
       console.error('Navigation buttons not found.');
     }
 
-    // Swipe gesture support for mobile
     let startX = 0;
     let endX = 0;
 

@@ -124,7 +124,7 @@ fetchBid();
  */
 
 import { setLogoutListener } from '../../ui/global/logout';
-import { readProfile /* readUserBids */ } from '../../api/profile/read';
+import { readProfile, readUserBids } from '../../api/profile/read';
 import { onUpdateProfile } from '../../ui/profile/update';
 import { deleteListing } from '../../api/listing/delete';
 
@@ -262,3 +262,4 @@ export const renderProfilePage = async () => {
 };
 
 renderProfilePage();
+readUserBids();

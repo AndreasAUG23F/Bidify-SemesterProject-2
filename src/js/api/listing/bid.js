@@ -29,3 +29,24 @@ export const fetchBid = async (bidAmount, id) => {
     console.error('Error fetching bid:', error);
   }
 };
+
+export const getBids = async (id) => {
+  try {
+    const response = await fetch(`${AUCTION_LISTINGS}/${id}/bids`, {
+      method: 'GET',
+      headers: headers(),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      console.error(
+        `Failed to fetch bids for listing ID ${id}: ${response.status}`
+      );
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching bids:', error);
+    return [];
+  }
+};
