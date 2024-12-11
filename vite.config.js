@@ -9,7 +9,7 @@ export default defineConfig({
   appType: 'mpa',
   base: '/',
   build: {
-    outDir: 'dist',
+    /* outDir: 'dist', */
     target: 'esnext',
     rollupOptions: {
       input: {
