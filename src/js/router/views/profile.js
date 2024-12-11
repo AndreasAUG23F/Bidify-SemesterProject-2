@@ -200,11 +200,9 @@ export const renderProfilePage = async () => {
 
   const userProfile = await readProfile(username);
 
-  // Profilseksjon
   const profileContainer = document.createElement('div');
   profileContainer.className = 'flex flex-col items-center w-full';
 
-  // Banner
   const bannerContainer = document.createElement('div');
   bannerContainer.className = 'relative w-full';
   bannerContainer.style.minHeight = '40vh';
@@ -212,7 +210,6 @@ export const renderProfilePage = async () => {
   bannerContainer.style.backgroundSize = 'cover';
   bannerContainer.style.backgroundPosition = 'center';
 
-  // Avatar
   const avatarContainer = document.createElement('div');
   avatarContainer.className =
     'absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32';
@@ -224,7 +221,6 @@ export const renderProfilePage = async () => {
   avatarContainer.appendChild(avatar);
   bannerContainer.appendChild(avatarContainer);
 
-  // Navn og Bio
   const nameElement = document.createElement('h2');
   nameElement.innerText = username;
   nameElement.className = 'text-xl font-semibold mt-16 text-center';
@@ -233,17 +229,15 @@ export const renderProfilePage = async () => {
   bioElement.innerText = userProfile.bio || 'No bio available.';
   bioElement.className = 'text-gray-500 mt-2 text-center';
 
-  // Coins
   const coinsElement = document.createElement('div');
   coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
   coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.credits || 0}</span>
                           <i class="fa-solid fa-coins text-yellow-500"></i>`;
 
-  // Oppdateringsknapp
   const updateProfileButton = document.createElement('button');
   updateProfileButton.innerText = 'Update Profile';
   updateProfileButton.className =
-    'mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
+    'mt-9 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
   const updateProfileDiv = document.getElementById('updateProfileDiv');
   updateProfileDiv.style.position = 'absolute';
   updateProfileDiv.style.top = '50%';
@@ -277,7 +271,6 @@ export const renderProfilePage = async () => {
 
   mainContainer.appendChild(profileContainer);
 
-  // Listings Container
   const listingsContainer = document.createElement('div');
   listingsContainer.id = 'listingsContainer';
   listingsContainer.className = 'w-full mt-8';
@@ -300,8 +293,7 @@ async function userListing() {
       return;
     }
 
-    // Legger til flex container for horisontal layout
-    listingsContainer.className = 'flex flex-wrap justify-center gap-6'; // Flexbox layout med spacing
+    listingsContainer.className = 'flex flex-wrap justify-center gap-6';
 
     listings.forEach((listing) => {
       const card = document.createElement('div');
@@ -338,10 +330,21 @@ async function userListing() {
       bidCount.className = 'text-gray-600';
       card.appendChild(bidCount);
 
+      const buttonContainer = document.createElement('div');
+      buttonContainer.className = 'flex justify-center gap-4 mt-4';
+
+      const monitorButton = document.createElement('button');
+      monitorButton.textContent = 'Monitor Listing';
+      monitorButton.className =
+        'bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition';
+      monitorButton.addEventListener('click', () => {
+        alert(`Monitoring listing: ${listing.title}`);
+      });
+
       const deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
       deleteButton.className =
-        'mt-4 bg-red-600 text-white py-2 px-6 rounded hover:bg-red-700 transition';
+        'bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition';
       deleteButton.addEventListener('click', async (event) => {
         event.stopPropagation();
         const confirmDelete = confirm(
@@ -358,7 +361,11 @@ async function userListing() {
           }
         }
       });
-      card.appendChild(deleteButton);
+
+      buttonContainer.appendChild(monitorButton);
+      buttonContainer.appendChild(deleteButton);
+
+      card.appendChild(buttonContainer);
 
       listingsContainer.appendChild(card);
     });
@@ -369,5 +376,4 @@ async function userListing() {
   }
 }
 
-// Initialiser siden
 renderProfilePage();
