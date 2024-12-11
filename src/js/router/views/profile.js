@@ -338,7 +338,8 @@ async function userListing() {
       monitorButton.className =
         'bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition';
       monitorButton.addEventListener('click', () => {
-        alert(`Monitoring listing: ${listing.title}`);
+        window.location.href = `/post/?id=${listing.id}`;
+        localStorage.setItem('listingId', JSON.stringify(listing.id));
       });
 
       const deleteButton = document.createElement('button');
