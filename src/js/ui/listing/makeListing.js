@@ -76,7 +76,7 @@ export const displayListings = (listings) => {
     viewButton.className =
       'bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors';
     viewButton.addEventListener('click', async () => {
-      window.location.href = `/post/?id=${listing.id}`;
+      window.location.href = `/listing/?id=${listing.id}`;
       localStorage.setItem('listingId', JSON.stringify(listing.id));
     });
 

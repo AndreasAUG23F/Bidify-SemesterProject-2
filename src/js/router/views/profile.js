@@ -151,7 +151,7 @@ async function userListing() {
         img.className = 'w-full h-48 object-cover mb-4 cursor-pointer rounded';
 
         img.addEventListener('click', () => {
-          window.location.href = `/post/?id=${listing.id}`;
+          window.location.href = `/listing/?id=${listing.id}`;
           localStorage.setItem('listingId', JSON.stringify(listing.id));
         });
 
@@ -177,7 +177,7 @@ async function userListing() {
       monitorButton.className =
         'bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition';
       monitorButton.addEventListener('click', () => {
-        window.location.href = `/post/?id=${listing.id}`;
+        window.location.href = `/listing/?id=${listing.id}`;
         localStorage.setItem('listingId', JSON.stringify(listing.id));
       });
 

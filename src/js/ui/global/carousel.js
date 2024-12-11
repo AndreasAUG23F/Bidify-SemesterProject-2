@@ -58,7 +58,7 @@ export const initCarousel = async (carouselSelector) => {
         'absolute inset-x-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white text-lg sm:text-xl py-3 px-8 rounded shadow-lg opacity-0 group-hover:opacity-100 whitespace-nowrap transition-transform duration-300 ease-in-out hover:scale-105 flex items-center justify-center';
       viewButton.style.minWidth = '150px';
       viewButton.addEventListener('click', async () => {
-        window.location.href = `/post/?id=${listing.id}`;
+        window.location.href = `/listing/?id=${listing.id}`;
         localStorage.setItem('listingId', JSON.stringify(listing.id));
       });
 

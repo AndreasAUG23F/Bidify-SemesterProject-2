@@ -100,7 +100,7 @@ export async function renderListingDetails(listingData) {
   if (loggedInUser?.name === listing.seller.name) {
     editButton.classList.remove('hidden');
     editButton.addEventListener('click', () => {
-      window.location.href = `/post/edit/?id=${listing.id}`;
+      window.location.href = `/listing/edit/?id=${listing.id}`;
     });
   }
 

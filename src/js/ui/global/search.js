@@ -94,7 +94,7 @@ const renderListings = (listings, query = '') => {
             <p class="text-sm text-gray-600">Posted by: ${listing.seller?.name || 'Unknown Seller'}</p>
           </div>
         </div>
-        <a href="/post/?id=${listing.id}" 
+        <a href="/listing/?id=${listing.id}" 
            class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg text-center font-medium hover:bg-blue-700 transition">
            Check out post
         </a>

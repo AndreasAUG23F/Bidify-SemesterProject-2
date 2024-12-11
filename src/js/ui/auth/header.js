@@ -43,7 +43,7 @@ export const makeHeader = () => {
 
   if (loggedIn) {
     const createListingLink = document.createElement('a');
-    createListingLink.href = '/post/create/';
+    createListingLink.href = '/listing/create/';
     createListingLink.className =
       'font-medium text-gray-700 hover:text-gray-900';
     createListingLink.textContent = 'Create Listing';

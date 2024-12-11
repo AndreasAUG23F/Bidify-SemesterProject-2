@@ -55,7 +55,7 @@ export async function onUpdateListing(event, listingId) {
   const updatedListing = await updateListing(listingId, editInfo);
 
   if (updatedListing) {
-    window.location.href = `/post/?id=${listingId}`;
+    window.location.href = `/listing/?id=${listingId}`;
   } else {
     alert('Update failed. Your listing remains unchanged.');
   }
