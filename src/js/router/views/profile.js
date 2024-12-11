@@ -1,7 +1,7 @@
 /* import { setLogoutListener } from '../../ui/global/logout';
 import { readProfile, readUserBids } from '../../api/profile/read';
 import { onUpdateProfile } from '../../ui/profile/update';
-import { fetchBid } from '../../api/listing/bid';
+import { placeBid } from '../../api/listing/bid';
 
 setLogoutListener();
 
@@ -120,15 +120,12 @@ export const renderProfilePage = async () => {
 };
 
 renderProfilePage();
-fetchBid();
+placeBid();
  */
 
-import { setLogoutListener } from '../../ui/global/logout';
-import { readProfile, readUserBids } from '../../api/profile/read';
+import { readProfile /* readUserBids */ } from '../../api/profile/read';
 import { onUpdateProfile } from '../../ui/profile/update';
 import { deleteListing } from '../../api/listing/delete';
-
-setLogoutListener();
 
 const form = document.getElementById('updateProfile');
 form.addEventListener('submit', onUpdateProfile);
@@ -146,12 +143,11 @@ export const renderProfilePage = async () => {
   profileContainer.className = 'flex flex-col items-center w-full';
 
   const bannerContainer = document.createElement('div');
-  bannerContainer.className = 'relative w-full h-52';
-  const banner = document.createElement('img');
-  banner.src = userProfile.banner?.url || 'default-banner.png';
-  banner.alt = 'User Banner';
-  banner.className = 'w-full h-full object-cover';
-  bannerContainer.appendChild(banner);
+  bannerContainer.className = 'relative w-full';
+  bannerContainer.style.minHeight = '40vh';
+  bannerContainer.style.backgroundImage = `url(${userProfile.banner?.url || 'default-banner.png'})`;
+  bannerContainer.style.backgroundSize = 'cover';
+  bannerContainer.style.backgroundPosition = 'center';
 
   const avatarContainer = document.createElement('div');
   avatarContainer.className =
@@ -262,4 +258,3 @@ export const renderProfilePage = async () => {
 };
 
 renderProfilePage();
-readUserBids();

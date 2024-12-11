@@ -1,4 +1,4 @@
-import { fetchBid } from '../../api/listing/bid';
+import { placeBid } from '../../api/listing/bid';
 
 export async function renderListingDetails(listingData) {
   const listing = listingData.data;
@@ -23,6 +23,17 @@ export async function renderListingDetails(listingData) {
   descriptionElement.textContent =
     listing.description || 'No description available.';
 
+  const endAtElement = document.createElement('p');
+  endAtElement.className =
+    'end-at text-gray-700 text-lg font-semibold py-2 px-4 bg-yellow-100 border border-yellow-300 rounded-lg';
+  endAtElement.textContent = `⏰ Auction Ends At: ${
+    listing.endsAt
+      ? new Date(listing.endsAt).toLocaleString()
+      : 'No end time specified'
+  }`;
+
+  const detailsContainer = document.getElementById('listingDetails');
+
   const carouselContainer = document.querySelector('#carouselContainer');
   const dotsContainer = document.querySelector('.dot-container');
   carouselContainer.innerHTML = '';
@@ -36,14 +47,14 @@ export async function renderListingDetails(listingData) {
       index === 0 ? 'block' : 'hidden'
     } w-full h-full object-cover rounded-lg`;
 
-    carouselContainer.appendChild(slide);
-
     const dot = document.createElement('span');
     dot.className = `dot ${
       index === 0 ? 'bg-gray-600' : 'bg-gray-300'
     } h-3 w-3 rounded-full cursor-pointer transition hover:bg-gray-400`;
     dot.addEventListener('click', () => updateCarousel(index));
-    dotsContainer.appendChild(dot);
+
+    carouselContainer.append(slide);
+    dotsContainer.append(dot);
   });
 
   let currentSlide = 0;
@@ -110,20 +121,19 @@ export async function renderListingDetails(listingData) {
       bidderName.textContent = bid.bidder?.name || 'Anonymous';
       bidderName.className = 'font-medium';
 
-      bidderInfo.append(bidderAvatar, bidderName);
-
       const bidAmount = document.createElement('span');
       bidAmount.textContent = `${bid.amount} USD`;
       bidAmount.className = 'text-blue-600 font-semibold';
 
+      bidderInfo.append(bidderAvatar, bidderName);
       bidItem.append(bidderInfo, bidAmount);
-      bidsList.appendChild(bidItem);
+      bidsList.append(bidItem);
     });
   } else {
     const noBidsMessage = document.createElement('p');
     noBidsMessage.textContent = 'No bids yet.';
     noBidsMessage.className = 'text-gray-500';
-    bidsContainer.appendChild(noBidsMessage);
+    bidsContainer.append(noBidsMessage);
   }
 
   const bidForm = document.createElement('form');
@@ -167,11 +177,11 @@ export async function renderListingDetails(listingData) {
       return;
     }
 
-    fetchBid(bidAmount, listing.id);
+    placeBid(bidAmount, listing.id);
   });
 
   bidForm.append(bidInput, bidButton);
-  bidsContainer.append(bidsTitle, bidsList, bidForm);
+  bidsContainer.append(bidsTitle, bidsList, endAtElement, bidForm);
 
-  document.getElementById('listingDetails').appendChild(bidsContainer);
+  detailsContainer.appendChild(bidsContainer);
 }
