@@ -1,3 +1,13 @@
+/**
+ * Fetches the user's credits from their profile.
+ * Requires the user to be logged in with a valid token in localStorage.
+ * @module FetchUserCredits
+ * @async
+ * @function fetchUserCredits
+ * @returns {Promise<number|null>} - Returns the user's credits if successful, or null if an error occurs or the user is not logged in.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
 import { AUCTION_PROFILES } from '../../api/constants';
 
 export const fetchUserCredits = async () => {

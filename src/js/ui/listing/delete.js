@@ -1,3 +1,14 @@
+/**
+ * Handles the deletion of a listing.
+ * Prompts the user for confirmation, calls the API to delete the listing,
+ * and updates the UI by either redirecting or removing the deleted listing element.
+ * @module DeleteListing
+ * @async
+ * @function onDeleteListing
+ * @param {Event} event - The click event triggered by the delete button.
+ * @throws {Error} - Logs errors if the listing ID is not found or the deletion fails.
+ */
+
 import { deleteListing } from '../../api/listing/delete';
 
 export async function onDeleteListing(event) {

@@ -1,3 +1,11 @@
+/**
+ * Dynamically creates and renders the header section of the website.
+ * Includes navigation links, a responsive menu toggle, and logout functionality for logged-in users.
+ * @module Header
+ * @function makeHeader
+ * @throws {Error} - Logs errors if the header element is not found or rendering fails.
+ */
+
 import { setLogoutListener } from '../global/logout';
 
 export const makeHeader = () => {

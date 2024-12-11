@@ -1,3 +1,37 @@
+/**
+ * Handles the creation of a new auction listing.
+ * Includes dynamic updating of a preview section, validation of input fields, and submission of listing data to the server.
+ * @module CreateListing
+ */
+
+/**
+ * Dynamically updates the preview section based on the form input.
+ * Displays the title, description, expiry date, images, and tags in real-time.
+ * @function updatePreview
+ */
+
+/**
+ * Handles the addition of new media URL input fields.
+ * Limits the total number of media fields to a maximum of 8.
+ * @function addMediaUrl
+ */
+
+/**
+ * Removes a media URL input field and updates the preview.
+ * @function removeMediaUrl
+ * @param {Event} event - The click event triggered by the remove button.
+ */
+
+/**
+ * Submits the listing creation form.
+ * Collects form data, validates inputs, and sends the data to the server.
+ * Redirects the user to the home page upon successful creation.
+ * @async
+ * @function onCreateListing
+ * @param {Event} event - The form submission event.
+ * @throws {Error} - Logs errors if the API call or data submission fails.
+ */
+
 import { createListing } from '../../api/listing/create';
 
 const previewTitle = document.getElementById('previewTitle');

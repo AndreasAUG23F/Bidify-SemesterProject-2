@@ -1,3 +1,17 @@
+/**
+ * Creates a new auction listing by sending data to the API.
+ * @module CreateListing
+ * @async
+ * @function createListing
+ * @param {string} title - The title of the listing.
+ * @param {string} description - A detailed description of the listing.
+ * @param {string} endsAt - The end date and time for the auction in ISO format.
+ * @param {Array<string>} tags - An array of tags associated with the listing.
+ * @param {Array<string>} media - An array of media URLs for the listing.
+ * @returns {Promise<Object|undefined>} - The result of the API call if successful, or undefined if it fails.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
 import { AUCTION_LISTINGS } from '../constants';
 import { headers } from '../header';
 

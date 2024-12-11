@@ -1,3 +1,23 @@
+/**
+ * Fetches profile information for a specific user, including their listings and wins.
+ * @module ReadProfile
+ * @async
+ * @function readProfile
+ * @param {string} userName - The username of the profile to fetch.
+ * @returns {Promise<Object|undefined>} - Returns the user's profile data if successful, or undefined if an error occurs.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
+/**
+ * Fetches all auction listings for the currently logged-in user.
+ * The user's name is retrieved from localStorage.
+ * @module ReadUserListings
+ * @async
+ * @function readUserListings
+ * @returns {Promise<Array|undefined>} - Returns an array of the user's listings if successful, or undefined if the user is not logged in or an error occurs.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
 import { AUCTION_PROFILES } from '../constants';
 import { headers } from '../header';
 

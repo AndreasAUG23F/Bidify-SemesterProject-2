@@ -1,3 +1,21 @@
+/**
+ * Dynamically displays a list of auction listings in a grid layout with animations.
+ *
+ * @module DisplayListings
+ * @function displayListings
+ * @param {Array<Object>} listings - The array of listing objects to be displayed.
+ * @param {string} listings[].id - The unique identifier for a listing.
+ * @param {string} listings[].title - The title of the listing.
+ * @param {string} [listings[].description] - A brief description of the listing.
+ * @param {Array<Object>} [listings[].media] - An array of media objects associated with the listing.
+ * @param {string} listings[].media[].url - The URL of the media item (e.g., image).
+ * @param {string} [listings[].media[].alt] - The alt text for the media item.
+ * @param {Array<Object>} [listings[].bids] - An array of bid objects associated with the listing.
+ * @param {number} listings[].bids[].amount - The amount of a bid.
+ * @throws {Error} If the listing container element is not found in the DOM.
+ * @returns {void} Appends dynamically created listing elements to the DOM.
+ */
+
 export const displayListings = (listings) => {
   const listingContainer = document.getElementById('listingContainer');
 

@@ -1,3 +1,23 @@
+/**
+ * Initializes the edit listing page.
+ * Ensures the user is authorized and loads the existing listing data into the form for editing.
+ * @module EditListingPage
+ */
+
+/**
+ * Authenticates the user before allowing access to the page.
+ * Redirects unauthorized users to the login page.
+ * @function authGuard
+ */
+
+/**
+ * Loads a specific auction listing by its ID and populates the edit form with its details.
+ * Also handles adding and removing media URL fields dynamically.
+ * @async
+ * @function loadListing
+ * @throws {Error} - Logs and displays errors if the listing cannot be loaded or updated.
+ */
+
 import { authGuard } from '../../utilities/authGuard';
 import { readListing } from '../../api/listing/read';
 import { onUpdateListing } from '../../ui/listing/update';

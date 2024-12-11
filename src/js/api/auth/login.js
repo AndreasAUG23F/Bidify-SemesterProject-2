@@ -1,3 +1,16 @@
+/**
+ * Handles user login by sending credentials to the authentication API.
+ * Stores the user's access token and data in localStorage upon successful login.
+ * @module Login
+ * @async
+ * @function login
+ * @param {Object} params - The login parameters.
+ * @param {string} params.email - The user's email address.
+ * @param {string} params.password - The user's password.
+ * @returns {Promise<void>} - No return value.
+ * @throws {Error} - Logs and alerts errors if the login request fails.
+ */
+
 import { API_AUTH_LOGIN } from '../constants';
 import { headers } from '../header';
 

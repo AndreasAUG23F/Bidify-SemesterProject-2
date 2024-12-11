@@ -1,3 +1,42 @@
+/**
+ * Initializes and runs the landing page.
+ * Handles rendering of logged-in or logged-out content, fetching and displaying listings,
+ * and initializing global components like carousel and search.
+ * @module HomePage
+ */
+
+/**
+ * Checks if the user is logged in by verifying the presence of a token in localStorage.
+ * @function isUserLoggedIn
+ * @returns {boolean} - Returns true if a token exists, otherwise false.
+ */
+
+/**
+ * Retrieves the username of the logged-in user from localStorage.
+ * @function getUsername
+ * @returns {string} - Returns the username or "User" if no username is found.
+ */
+
+/**
+ * Displays content for logged-in users on the landing page.
+ * Renders a personalized welcome message.
+ * @function displayLoggedInContent
+ */
+
+/**
+ * Displays content for logged-out users on the landing page.
+ * Renders a general welcome message and login/register buttons.
+ * @function displayLoggedOutContent
+ */
+
+/**
+ * Main function to initialize and render the landing page.
+ * Fetches listings, initializes global components, and determines content based on login status.
+ * @async
+ * @function runPage
+ * @throws {Error} - Logs errors if fetching or rendering fails.
+ */
+
 import { displayListings } from '../../ui/listing/makeListing';
 import { readListings } from '../../api/listing/read';
 import { initCarousel } from '../../ui/global/carousel';

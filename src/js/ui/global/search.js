@@ -1,3 +1,40 @@
+/**
+ * Handles the initialization and functionality of the search feature for listings.
+ * Fetches all listings, filters them based on user input, and displays the results dynamically.
+ * @module Search
+ */
+
+/**
+ * Fetches all listings and initializes the display with an empty result set.
+ * @async
+ * @function fetchListings
+ * @throws {Error} - Logs errors if listings cannot be fetched.
+ */
+
+/**
+ * Renders a list of filtered listings based on the user's query.
+ * If no query is provided, hides the results container.
+ * @function renderListings
+ * @param {Array<Object>} listings - The filtered listings to display.
+ * @param {string} [query=''] - The search query used to filter listings.
+ */
+
+/**
+ * Filters listings based on the search query entered by the user.
+ * Updates the display with the filtered results.
+ * @function filterListings
+ * @param {string} query - The user's search query.
+ */
+
+/**
+ * Initializes the search functionality.
+ * Sets up event listeners for search input and clear button.
+ * Fetches all listings to enable filtering.
+ * @async
+ * @function initSearch
+ * @throws {Error} - Logs errors if initialization fails.
+ */
+
 import { readListings } from '../../api/listing/read';
 
 const searchInput = document.getElementById('searchInput');

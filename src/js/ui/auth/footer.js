@@ -1,3 +1,11 @@
+/**
+ * Dynamically creates and renders the footer section of the website.
+ * Includes navigation links, copyright information, and handles logout functionality for logged-in users.
+ * @module Footer
+ * @function makeFooter
+ * @throws {Error} - Logs errors if the footer element is not found or rendering fails.
+ */
+
 import { setLogoutListener } from '../global/logout';
 
 export const makeFooter = () => {

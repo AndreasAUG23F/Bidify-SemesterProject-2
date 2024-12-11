@@ -1,3 +1,15 @@
+/**
+ * Renders the listing details page, including media carousel, seller details,
+ * bid information, and interaction elements like editing and bidding.
+ *
+ * @module RenderListingDetails
+ * @async
+ * @function renderListingDetails
+ * @param {Object} listingData - The data object containing details of the listing.
+ * @param {Object} listingData.data - The actual listing information.
+ * @throws {Error} - Logs errors if elements cannot be rendered or user data is missing.
+ */
+
 import { fetchBid } from '../../api/listing/bid';
 
 export async function renderListingDetails(listingData) {

@@ -1,36 +1,28 @@
-/* import { register } from "../../api/auth/register.js";
+/**
+ * Handles the registration form submission.
+ * Prevents the default form submission behavior and gathers input data for registration.
+ * Calls the API to register the user.
+ * @module RegisterHandler
+ * @async
+ * @function onRegister
+ * @param {Event} event - The form submission event.
+ * @throws {Error} - Logs errors if the registration API call fails.
+ */
+
+import { register } from '../../api/auth/register.js';
 
 export async function onRegister(event) {
-    event.preventDefault();
-  
-    const formData = new FormData(event.target);
-  
-    const registerData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-    };
-  
-    register(registerData);
-  } */
+  event.preventDefault();
 
-    import { register } from "../../api/auth/register.js";
-
-export async function onRegister(event) {
-  event.preventDefault(); // Hindrer skjemaet fra å sende inn og refreshe siden.
-
-  // Henter data fra skjemaet
   const formData = new FormData(event.target);
 
   const registerData = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    password: formData.get("password"),
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
   };
 
-  // Debug: Logg dataen for å bekrefte at alt er korrekt
-  console.log("Register Data:", registerData);
+  console.log('Register Data:', registerData);
 
-  // Send dataen til API
   register(registerData);
 }

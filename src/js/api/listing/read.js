@@ -1,3 +1,25 @@
+/**
+ * Fetches a single auction listing by its ID, including seller and bids information.
+ * The ID is retrieved from the current URL's query parameters.
+ * @module ReadListing
+ * @async
+ * @function readListing
+ * @returns {Promise<Object|undefined>} - Returns the listing data if successful, or undefined if the request fails.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
+/**
+ * Fetches multiple auction listings with optional pagination and filtering by tag.
+ * @module ReadListings
+ * @async
+ * @function readListings
+ * @param {number} [limit=12] - The maximum number of listings to fetch.
+ * @param {number} [page=1] - The page number to fetch.
+ * @param {string} [tag] - An optional tag to filter listings by.
+ * @returns {Promise<Array>} - Returns an array of listing objects.
+ * @throws {Error} - Logs and throws errors if the API call fails.
+ */
+
 import { AUCTION_LISTINGS } from '../constants';
 import { headers } from '../header';
 

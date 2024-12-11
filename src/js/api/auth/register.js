@@ -1,3 +1,17 @@
+/**
+ * Handles user registration by sending user details to the registration API.
+ * Redirects the user to the login page upon successful registration.
+ * @module Register
+ * @async
+ * @function register
+ * @param {Object} params - The registration parameters.
+ * @param {string} params.name - The user's name.
+ * @param {string} params.email - The user's email address.
+ * @param {string} params.password - The user's password.
+ * @returns {Promise<void>} - No return value.
+ * @throws {Error} - Logs and alerts errors if the registration request fails.
+ */
+
 import { API_AUTH_REGISTER } from '../constants';
 import { headers } from '../header';
 

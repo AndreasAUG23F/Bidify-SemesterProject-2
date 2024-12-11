@@ -1,3 +1,17 @@
+/**
+ * Updates a user's profile information, including avatar, banner, and bio.
+ * Sends a PUT request to the API to update the profile data.
+ * @module UpdateProfile
+ * @async
+ * @function updateProfile
+ * @param {string} username - The username of the profile to be updated.
+ * @param {string} avatar - The URL of the new avatar image.
+ * @param {string} banner - The URL of the new banner image.
+ * @param {string} bio - The new bio text for the profile.
+ * @returns {Promise<Object|undefined>} - Returns the updated profile data if successful, or undefined if an error occurs.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
 import { AUCTION_PROFILES } from '../constants';
 import { headers } from '../header';
 

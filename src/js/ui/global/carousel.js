@@ -1,3 +1,13 @@
+/**
+ * Initializes a carousel with auction listings.
+ * Dynamically loads listings, sets up navigation controls, and supports touch gestures for mobile users.
+ * @module Carousel
+ * @async
+ * @function initCarousel
+ * @param {string} carouselSelector - A CSS selector to identify the carousel container element.
+ * @throws {Error} - Logs errors if the carousel cannot be initialized or data fetching fails.
+ */
+
 import { readListings } from '../../api/listing/read';
 
 export const initCarousel = async (carouselSelector) => {
@@ -129,11 +139,9 @@ export const initCarousel = async (carouselSelector) => {
     carouselContainer.addEventListener('touchend', (e) => {
       endX = e.changedTouches[0].clientX;
       if (startX - endX > 50) {
-        // Swipe left
         currentSlide = (currentSlide + 1) % totalSlides;
         updatePosition();
       } else if (endX - startX > 50) {
-        // Swipe right
         currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         updatePosition();
       }

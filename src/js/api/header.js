@@ -1,3 +1,11 @@
+/**
+ * Generates HTTP headers for API requests.
+ * Includes the API key and authorization token if available.
+ * @module Headers
+ * @function headers
+ * @returns {Headers} - An instance of the Headers object containing the necessary headers.
+ */
+
 import { API_KEY } from './constants';
 
 const token = JSON.parse(localStorage.getItem('token'));

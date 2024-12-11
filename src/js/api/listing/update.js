@@ -1,3 +1,19 @@
+/**
+ * Updates an existing auction listing with new details.
+ * Sends a PUT request to the API to update the listing.
+ * @module UpdateListing
+ * @async
+ * @function updateListing
+ * @param {string} listingId - The ID of the listing to be updated.
+ * @param {Object} updatedData - The updated data for the listing.
+ * @param {string} updatedData.title - The new title for the listing.
+ * @param {string} updatedData.description - The new description for the listing.
+ * @param {Array<string>} updatedData.tags - An array of new tags for the listing.
+ * @param {Array<string>} updatedData.media - An array of new media URLs for the listing.
+ * @returns {Promise<Object|null>} - Returns the updated listing data if successful, or null if the update fails.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
+
 import { AUCTION_LISTINGS } from '../constants';
 import { headers } from '../header';
 
