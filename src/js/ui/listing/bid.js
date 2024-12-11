@@ -1,4 +1,4 @@
-import { placeBid } from '../../api/listing/bid';
+import { fetchBid } from '../../api/listing/bid';
 
 export const onBid = async (event) => {
   event.preventDefault();
@@ -15,5 +15,5 @@ export const onBid = async (event) => {
 
   const amount = Number(bidAmount);
 
-  placeBid(amount, id);
+  fetchBid(amount, id);
 };

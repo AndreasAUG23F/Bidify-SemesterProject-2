@@ -1,7 +1,7 @@
 import { AUCTION_LISTINGS } from '../constants';
 import { headers } from '../header';
 
-export const placeBid = async (bidAmount, id) => {
+export const fetchBid = async (bidAmount, id) => {
   const parsedAmount = parseInt(bidAmount);
   const body = {
     amount: parsedAmount,
@@ -10,7 +10,7 @@ export const placeBid = async (bidAmount, id) => {
   console.log('body', body);
 
   try {
-    console.log('trying to post', body);
+    console.log('trying to fetch', body);
     const response = await fetch(`${AUCTION_LISTINGS}/${id}/bids`, {
       method: 'POST',
       headers: headers(),
@@ -23,10 +23,10 @@ export const placeBid = async (bidAmount, id) => {
       window.location.reload();
       return data.data;
     } else {
-      console.log('Error posting', response);
+      console.log('Error fetching', response);
     }
   } catch (error) {
-    console.error('Error posting bid:', error);
+    console.error('Error fetching bid:', error);
   }
 };
 

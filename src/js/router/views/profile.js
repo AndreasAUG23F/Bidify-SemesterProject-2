@@ -1,129 +1,4 @@
-/* import { setLogoutListener } from '../../ui/global/logout';
-import { readProfile, readUserBids } from '../../api/profile/read';
-import { onUpdateProfile } from '../../ui/profile/update';
-import { placeBid } from '../../api/listing/bid';
-
-setLogoutListener();
-
-const form = document.getElementById('updateProfile');
-form.addEventListener('submit', onUpdateProfile);
-
-const userData = JSON.parse(localStorage.getItem('userData'));
-const username = userData.name;
-
-export const renderProfilePage = async () => {
-  const outerContainer = document.getElementById('outerContainer');
-  outerContainer.innerHTML = '';
-
-  const userProfile = await readProfile(username);
-  const userBids = await readUserBids(username);
-  console.log('userBids', userBids);
-  console.log(userProfile);
-
-  const profileContainer = document.createElement('div');
-  profileContainer.className = 'flex flex-col items-center w-full';
-
-  const bannerContainer = document.createElement('div');
-  bannerContainer.className = 'relative w-full h-52';
-  const banner = document.createElement('img');
-  banner.src = userProfile.banner?.url || 'default-banner.png';
-  banner.alt = 'User Banner';
-  banner.className = 'w-full h-full object-cover';
-  bannerContainer.appendChild(banner);
-
-  const avatarContainer = document.createElement('div');
-  avatarContainer.className =
-    'absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32';
-  const avatar = document.createElement('img');
-  avatar.src = userProfile.avatar?.url || 'default-avatar.png';
-  avatar.alt = 'User Avatar';
-  avatar.className =
-    'w-full h-full rounded-full border-4 border-white shadow-lg object-cover';
-  avatarContainer.appendChild(avatar);
-  bannerContainer.appendChild(avatarContainer);
-
-  const nameElement = document.createElement('h2');
-  nameElement.innerText = username;
-  nameElement.className = 'text-xl font-semibold mt-16 text-center';
-
-  const bioElement = document.createElement('p');
-  bioElement.innerText = userProfile.bio || 'No bio available.';
-  bioElement.className = 'text-gray-500 mt-2 text-center';
-
-  const coinsElement = document.createElement('div');
-  coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
-  coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.credits || 0}</span>
-                          <i class="fa-solid fa-coins text-yellow-500"></i>`;
-
-  const updateProfileButton = document.createElement('button');
-  updateProfileButton.innerText = 'Update Profile';
-  updateProfileButton.className =
-    'mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
-  const updateProfileDiv = document.getElementById('updateProfileDiv');
-  updateProfileButton.addEventListener('click', () => {
-    console.log('update', updateProfileDiv);
-    updateProfileDiv.classList.remove('hidden');
-  });
-
-  profileContainer.append(
-    bannerContainer,
-    nameElement,
-    bioElement,
-    coinsElement,
-    updateProfileButton
-  );
-  outerContainer.appendChild(profileContainer);
-
-  // Adding close functionality
-  const closeProfileButton = document.getElementById('closeProfileButton');
-  if (closeProfileButton) {
-    closeProfileButton.addEventListener('click', () => {
-      updateProfileDiv.classList.add('hidden');
-    });
-  }
-
-  const auctionsSection = document.createElement('div');
-  auctionsSection.className = 'px-6 md:px-16 lg:px-32 mt-12';
-  auctionsSection.innerHTML =
-    '<h2 class="text-2xl font-bold mb-6">My auctions</h2>';
-
-  if (userProfile.listings.length === 0) {
-    auctionsSection.innerHTML +=
-      '<p class="text-gray-500">No active auctions.</p>';
-  } else {
-    const auctionsGrid = document.createElement('div');
-    auctionsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
-    userProfile.listings.forEach((auction) => {
-      const auctionCard = document.createElement('div');
-      auctionCard.className =
-        'flex items-center space-x-4 bg-white shadow-md p-4 rounded-lg';
-
-      const auctionImage = document.createElement('img');
-      auctionImage.src = auction.media[0].url || '/images/default-product.png';
-      auctionImage.alt = auction.title;
-      auctionImage.className = 'w-24 h-24 rounded-lg object-cover';
-
-      const auctionDetails = document.createElement('div');
-      auctionDetails.innerHTML = `
-         <h3 class="text-lg font-medium">${auction.title}</h3>
-         <p class="text-gray-500 text-sm">Current bid: $${auction.currentBid || 0}</p>
-       `;
-
-      auctionCard.append(auctionImage, auctionDetails);
-      auctionsGrid.appendChild(auctionCard);
-    });
-    auctionsSection.appendChild(auctionsGrid);
-  }
-
-
-  outerContainer.appendChild(auctionsSection);
-};
-
-renderProfilePage();
-placeBid();
- */
-
-import { readProfile /* readUserBids */ } from '../../api/profile/read';
+import { readProfile, readUserListings } from '../../api/profile/read';
 import { onUpdateProfile } from '../../ui/profile/update';
 import { deleteListing } from '../../api/listing/delete';
 
@@ -136,6 +11,9 @@ const username = userData.name;
 export const renderProfilePage = async () => {
   const outerContainer = document.getElementById('outerContainer');
   outerContainer.innerHTML = '';
+
+  const mainContainer = document.createElement('div');
+  mainContainer.className = 'flex flex-col items-center w-full';
 
   const userProfile = await readProfile(username);
 
@@ -178,6 +56,13 @@ export const renderProfilePage = async () => {
   updateProfileButton.className =
     'mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
   const updateProfileDiv = document.getElementById('updateProfileDiv');
+
+  updateProfileDiv.style.position = 'absolute';
+  updateProfileDiv.style.top = '50%';
+  updateProfileDiv.style.left = '50%';
+  updateProfileDiv.style.transform = 'translate(-50%, -50%)';
+  updateProfileDiv.style.zIndex = '10';
+
   updateProfileButton.addEventListener('click', () => {
     updateProfileDiv.classList.remove('hidden');
   });
@@ -189,72 +74,108 @@ export const renderProfilePage = async () => {
     coinsElement,
     updateProfileButton
   );
-  outerContainer.appendChild(profileContainer);
 
   const closeProfileButton = document.getElementById('closeProfileButton');
   if (closeProfileButton) {
+    closeProfileButton.style.position = 'absolute';
+    closeProfileButton.style.top = '10px';
+    closeProfileButton.style.right = '10px';
+    closeProfileButton.style.zIndex = '15';
+
     closeProfileButton.addEventListener('click', () => {
       updateProfileDiv.classList.add('hidden');
     });
   }
 
-  const auctionsSection = document.createElement('div');
-  auctionsSection.className = 'px-6 md:px-16 lg:px-32 mt-12';
-  auctionsSection.innerHTML =
-    '<h2 class="text-2xl font-bold mb-6">My auctions</h2>';
+  mainContainer.appendChild(profileContainer);
 
-  if (userProfile.listings.length === 0) {
-    auctionsSection.innerHTML +=
-      '<p class="text-gray-500">No active auctions.</p>';
-  } else {
-    const auctionsGrid = document.createElement('div');
-    auctionsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+  const listingsContainer = document.createElement('div');
+  listingsContainer.id = 'listingsContainer';
+  listingsContainer.className = 'w-full mt-8';
+  mainContainer.appendChild(listingsContainer);
 
-    userProfile.listings.forEach((auction) => {
-      const auctionCard = document.createElement('div');
-      auctionCard.className =
-        'flex items-center space-x-4 bg-white shadow-md p-4 rounded-lg';
+  outerContainer.appendChild(mainContainer);
 
-      const auctionImage = document.createElement('img');
-      auctionImage.src = auction.media[0]?.url || '/images/default-product.png';
-      auctionImage.alt = auction.title;
-      auctionImage.className = 'w-24 h-24 rounded-lg object-cover';
+  await userListing();
+};
 
-      const auctionDetails = document.createElement('div');
-      auctionDetails.innerHTML = `
-         <h3 class="text-lg font-medium">${auction.title}</h3>
-         <p class="text-gray-500 text-sm">Current bid: $${auction.currentBid || 0}</p>
-       `;
+async function userListing() {
+  const listingsContainer = document.getElementById('listingsContainer');
+
+  listingsContainer.innerHTML = '';
+
+  try {
+    const listings = await readUserListings();
+    if (!listings || listings.length === 0) {
+      listingsContainer.innerHTML = '<p>No listings found.</p>';
+      return;
+    }
+
+    listings.forEach((listing) => {
+      const card = document.createElement('div');
+      card.className =
+        'listing-card border p-4 rounded shadow-md max-w-xs text-center mx-auto';
+
+      const title = document.createElement('h2');
+      title.textContent = listing.title || 'No Title';
+      title.className = 'font-bold text-lg mb-2';
+      card.appendChild(title);
+
+      if (listing.media && listing.media[0]?.url) {
+        const img = document.createElement('img');
+        img.src = listing.media[0].url;
+        img.alt = listing.title || 'Listing Image';
+        img.className = 'w-full h-40 object-cover mb-2 cursor-pointer';
+
+        img.addEventListener('click', () => {
+          window.location.href = `/post/?id=${listing.id}`;
+          localStorage.setItem('listingId', JSON.stringify(listing.id));
+        });
+
+        card.appendChild(img);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className =
+          'w-full h-40 bg-gray-200 mb-2 flex items-center justify-center';
+        placeholder.textContent = 'No Image';
+        card.appendChild(placeholder);
+      }
+
+      const bidCount = document.createElement('p');
+      bidCount.textContent = `Bids: ${listing._count?.bids || 0}`;
+      bidCount.className = 'text-gray-600';
+      card.appendChild(bidCount);
 
       const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
       deleteButton.className =
-        'bg-red-500 text-white py-1 px-3 rounded-lg hover:bg-red-600';
-      deleteButton.innerText = 'Delete';
-
-      deleteButton.addEventListener('click', async () => {
-        const confirmed = confirm(
-          `Are you sure you want to delete the listing "${auction.title}"?`
+        'mt-2 bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700 transition';
+      deleteButton.addEventListener('click', async (event) => {
+        event.stopPropagation();
+        const confirmDelete = confirm(
+          `Are you sure you want to delete the listing: "${listing.title}"?`
         );
-        if (confirmed) {
-          const success = await deleteListing(auction.id);
-          if (success) {
-            auctionCard.remove();
-            alert(`Listing "${auction.title}" deleted successfully.`);
-          } else {
-            alert('Failed to delete the listing. Please try again.');
+        if (confirmDelete) {
+          try {
+            await deleteListing(listing.id);
+            alert('Listing deleted successfully.');
+
+            userListing();
+          } catch (error) {
+            console.error('Error deleting listing:', error);
+            alert('Failed to delete listing. Please try again later.');
           }
         }
       });
+      card.appendChild(deleteButton);
 
-      auctionDetails.appendChild(deleteButton);
-      auctionCard.append(auctionImage, auctionDetails);
-      auctionsGrid.appendChild(auctionCard);
+      listingsContainer.appendChild(card);
     });
-
-    auctionsSection.appendChild(auctionsGrid);
+  } catch (error) {
+    console.error('Error fetching user listings:', error);
+    listingsContainer.innerHTML =
+      '<p>Error loading listings. Please try again later.</p>';
   }
-
-  outerContainer.appendChild(auctionsSection);
-};
+}
 
 renderProfilePage();

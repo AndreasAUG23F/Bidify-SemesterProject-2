@@ -1,4 +1,4 @@
-import { placeBid } from '../../api/listing/bid';
+import { fetchBid } from '../../api/listing/bid';
 
 export async function renderListingDetails(listingData) {
   const listing = listingData.data;
@@ -177,7 +177,7 @@ export async function renderListingDetails(listingData) {
       return;
     }
 
-    placeBid(bidAmount, listing.id);
+    fetchBid(bidAmount, listing.id);
   });
 
   bidForm.append(bidInput, bidButton);
