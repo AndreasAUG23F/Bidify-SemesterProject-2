@@ -12,6 +12,7 @@
  * @throws {Error} - Logs and alerts errors if the registration request fails.
  */
 
+import { hideLoader, showLoader } from '../../ui/global/loader';
 import { API_AUTH_REGISTER } from '../constants';
 import { headers } from '../header';
 
@@ -22,6 +23,7 @@ export async function register({ name, email, password }) {
     password: password,
   };
 
+  showLoader();
   try {
     const response = await fetch(API_AUTH_REGISTER, {
       method: 'POST',
@@ -30,6 +32,7 @@ export async function register({ name, email, password }) {
     });
     if (response.ok) {
       alert('User registered');
+      hideLoader();
       window.location.href = '/auth/login/';
     }
   } catch (error) {

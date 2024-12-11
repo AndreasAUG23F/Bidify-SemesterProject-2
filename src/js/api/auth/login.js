@@ -11,6 +11,7 @@
  * @throws {Error} - Logs and alerts errors if the login request fails.
  */
 
+import { hideLoader, showLoader } from '../../ui/global/loader';
 import { API_AUTH_LOGIN } from '../constants';
 import { headers } from '../header';
 
@@ -20,6 +21,7 @@ export async function login({ email, password }) {
     password: password,
   };
 
+  showLoader();
   try {
     console.log('trying to login');
     const response = await fetch(API_AUTH_LOGIN, {
@@ -30,6 +32,7 @@ export async function login({ email, password }) {
 
     if (response.ok) {
       alert('User logged in');
+      hideLoader();
       window.location.href = '/';
       const data = await response.json();
       localStorage.setItem('token', JSON.stringify(data.data.accessToken));
