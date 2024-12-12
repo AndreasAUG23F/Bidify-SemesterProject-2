@@ -52,9 +52,12 @@ function updatePreview() {
   previewDescription.textContent =
     formData.get('description') || 'Listing Description';
 
-  previewExpiry.textContent = formData.get('expiryDate')
-    ? `Ends At: ${new Date(formData.get('expiryDate')).toLocaleDateString()}`
-    : 'Expiry Date not set';
+  previewExpiry.textContent =
+    formData.get('expiryDate') && formData.get('expiryTime')
+      ? `Ends At: ${new Date(
+          `${formData.get('expiryDate')}T${formData.get('expiryTime')}`
+        ).toLocaleString()}`
+      : 'Expiry Date and Time not set';
 
   const mediaItems = document.querySelectorAll('.media-url-item');
   previewImages.innerHTML = '';
@@ -146,12 +149,17 @@ export async function onCreateListing(event) {
     })
     .filter((mediaItem) => mediaItem !== null);
 
+  const expiryDate = formData.get('expiryDate');
+  const expiryTime = formData.get('expiryTime');
+  const endsAt =
+    expiryDate && expiryTime
+      ? new Date(`${expiryDate}T${expiryTime}`).toISOString()
+      : null;
+
   const createData = {
     title: formData.get('title'),
     description: formData.get('description'),
-    endsAt: formData.get('expiryDate')
-      ? new Date(formData.get('expiryDate')).toISOString()
-      : null,
+    endsAt,
     tags: formData.get('tags')
       ? formData
           .get('tags')

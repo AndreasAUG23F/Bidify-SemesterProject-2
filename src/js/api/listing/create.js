@@ -36,10 +36,17 @@ export async function createListing(title, description, endsAt, tags, media) {
     if (!response.ok) {
       console.error('Failed to create listing. Status:', response.status);
       console.error('API response body:', result);
+
+      alert(`Failed to create listing: ${result.message || 'Unknown error'}`);
+      return null;
     }
 
+    alert('Listing created successfully!');
     return result;
   } catch (error) {
     console.error('Something went wrong while creating the listing:', error);
+
+    alert('An error occurred while creating the listing. Please try again.');
+    return null;
   }
 }
