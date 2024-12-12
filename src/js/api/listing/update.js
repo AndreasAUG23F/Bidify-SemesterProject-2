@@ -1,3 +1,7 @@
+import { AUCTION_LISTINGS } from '../constants';
+import { headers } from '../header';
+import { showLoader, hideLoader } from '../../ui/global/loader';
+
 /**
  * Updates an existing auction listing with new details.
  * Sends a PUT request to the API to update the listing.
@@ -13,10 +17,6 @@
  * @returns {Promise<Object|null>} - Returns the updated listing data if successful, or null if the update fails.
  * @throws {Error} - Logs errors if the API call fails.
  */
-
-import { AUCTION_LISTINGS } from '../constants';
-import { headers } from '../header';
-
 export async function updateListing(
   listingId,
   { title, description, tags, media }
@@ -28,6 +28,7 @@ export async function updateListing(
     media,
   };
 
+  showLoader();
   try {
     const response = await fetch(`${AUCTION_LISTINGS}/${listingId}`, {
       method: 'PUT',
@@ -40,6 +41,9 @@ export async function updateListing(
         'Update failed. Server responded with:',
         response.statusText
       );
+      alert(
+        `Failed to update listing: ${response.statusText || 'Unknown error'}`
+      );
       return null;
     }
 
@@ -48,6 +52,9 @@ export async function updateListing(
     return data;
   } catch (error) {
     console.error('Failed to update the listing', error);
+    alert('An error occurred while updating the listing. Please try again.');
     return null;
+  } finally {
+    hideLoader();
   }
 }

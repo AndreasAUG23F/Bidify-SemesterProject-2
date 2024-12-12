@@ -1,3 +1,7 @@
+import { AUCTION_PROFILES } from '../constants';
+import { headers } from '../header';
+import { showLoader, hideLoader } from '../../ui/global/loader';
+
 /**
  * Fetches profile information for a specific user, including their listings and wins.
  * @module ReadProfile
@@ -7,22 +11,9 @@
  * @returns {Promise<Object|undefined>} - Returns the user's profile data if successful, or undefined if an error occurs.
  * @throws {Error} - Logs errors if the API call fails.
  */
-
-/**
- * Fetches all auction listings for the currently logged-in user.
- * The user's name is retrieved from localStorage.
- * @module ReadUserListings
- * @async
- * @function readUserListings
- * @returns {Promise<Array|undefined>} - Returns an array of the user's listings if successful, or undefined if the user is not logged in or an error occurs.
- * @throws {Error} - Logs errors if the API call fails.
- */
-
-import { AUCTION_PROFILES } from '../constants';
-import { headers } from '../header';
-
 export async function readProfile(userName) {
   const queryParameter = '?_listings=true&_wins=true';
+  showLoader();
   try {
     const response = await fetch(
       `${AUCTION_PROFILES}/${userName}${queryParameter}`,
@@ -37,9 +28,20 @@ export async function readProfile(userName) {
     }
   } catch (error) {
     console.error('Error reading profile:', error);
+  } finally {
+    hideLoader();
   }
 }
 
+/**
+ * Fetches all auction listings for the currently logged-in user.
+ * The user's name is retrieved from localStorage.
+ * @module ReadUserListings
+ * @async
+ * @function readUserListings
+ * @returns {Promise<Array|undefined>} - Returns an array of the user's listings if successful, or undefined if the user is not logged in or an error occurs.
+ * @throws {Error} - Logs errors if the API call fails.
+ */
 export async function readUserListings() {
   const userData = JSON.parse(localStorage.getItem('userData'));
   if (!userData || !userData.name) {
@@ -49,6 +51,7 @@ export async function readUserListings() {
 
   const { name } = userData;
 
+  showLoader();
   try {
     const response = await fetch(`${AUCTION_PROFILES}/${name}/listings`, {
       method: 'GET',
@@ -63,5 +66,7 @@ export async function readUserListings() {
     }
   } catch (error) {
     console.error('Error reading profile:', error);
+  } finally {
+    hideLoader();
   }
 }

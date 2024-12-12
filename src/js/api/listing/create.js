@@ -1,3 +1,7 @@
+import { AUCTION_LISTINGS } from '../constants';
+import { headers } from '../header';
+import { showLoader, hideLoader } from '../../ui/global/loader';
+
 /**
  * Creates a new auction listing by sending data to the API.
  * @module CreateListing
@@ -11,10 +15,6 @@
  * @returns {Promise<Object|undefined>} - The result of the API call if successful, or undefined if it fails.
  * @throws {Error} - Logs errors if the API call fails.
  */
-
-import { AUCTION_LISTINGS } from '../constants';
-import { headers } from '../header';
-
 export async function createListing(title, description, endsAt, tags, media) {
   const body = {
     title,
@@ -24,6 +24,7 @@ export async function createListing(title, description, endsAt, tags, media) {
     media,
   };
 
+  showLoader();
   try {
     const response = await fetch(AUCTION_LISTINGS, {
       method: 'POST',
@@ -48,5 +49,7 @@ export async function createListing(title, description, endsAt, tags, media) {
 
     alert('An error occurred while creating the listing. Please try again.');
     return null;
+  } finally {
+    hideLoader();
   }
 }
