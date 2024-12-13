@@ -95,7 +95,7 @@ export const makeHeader = () => {
   });
 
   nav.append(logoLink, navLinksDiv, menuToggle);
-  header.appendChild(nav); // This standalone appendChild remains unchanged
+  header.appendChild(nav);
 
   const mediaQuery = window.matchMedia('(max-width: 768px)');
   const handleMediaChange = (e) => {
