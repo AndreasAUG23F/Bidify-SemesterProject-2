@@ -27,7 +27,7 @@ export const makeHeader = () => {
   logoImg.className =
     'h-16 w-auto md:h-20 transition-transform transform hover:scale-110 duration-300';
 
-  logoLink.appendChild(logoImg);
+  logoLink.append(logoImg);
 
   const navLinksDiv = document.createElement('div');
   navLinksDiv.className =
@@ -37,7 +37,7 @@ export const makeHeader = () => {
   homeLink.href = '/';
   homeLink.className = 'font-medium text-gray-700 hover:text-gray-900';
   homeLink.textContent = 'Home';
-  navLinksDiv.appendChild(homeLink);
+  navLinksDiv.append(homeLink);
 
   const loggedIn = localStorage.getItem('token');
 
@@ -53,8 +53,7 @@ export const makeHeader = () => {
     profileLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     profileLink.textContent = 'Profile';
 
-    navLinksDiv.appendChild(createListingLink);
-    navLinksDiv.appendChild(profileLink);
+    navLinksDiv.append(createListingLink, profileLink);
 
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logoutButton';
@@ -72,7 +71,7 @@ export const makeHeader = () => {
      hover:bg-red-600
      `;
     logoutButton.textContent = 'Logout';
-    navLinksDiv.appendChild(logoutButton);
+    navLinksDiv.append(logoutButton);
   } else {
     const registerLink = document.createElement('a');
     registerLink.href = '/auth/register/';
@@ -84,8 +83,7 @@ export const makeHeader = () => {
     loginLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     loginLink.textContent = 'Login';
 
-    navLinksDiv.appendChild(registerLink);
-    navLinksDiv.appendChild(loginLink);
+    navLinksDiv.append(registerLink, loginLink);
   }
 
   const menuToggle = document.createElement('button');
@@ -96,10 +94,8 @@ export const makeHeader = () => {
     navLinksDiv.classList.toggle('flex');
   });
 
-  nav.appendChild(logoLink);
-  nav.appendChild(navLinksDiv);
-  nav.appendChild(menuToggle);
-  header.appendChild(nav);
+  nav.append(logoLink, navLinksDiv, menuToggle);
+  header.appendChild(nav); // This standalone appendChild remains unchanged
 
   const mediaQuery = window.matchMedia('(max-width: 768px)');
   const handleMediaChange = (e) => {
