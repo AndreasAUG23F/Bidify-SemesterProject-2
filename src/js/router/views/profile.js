@@ -4,22 +4,6 @@
  * @module ProfilePage
  */
 
-/**
- * Renders the profile page for the logged-in user.
- * Fetches and displays profile information, listings, and handles actions like updating or deleting listings.
- * @async
- * @function renderProfilePage
- * @throws {Error} - Logs errors if profile or listings data cannot be fetched or rendered.
- */
-
-/**
- * Fetches and renders the user's auction listings.
- * Provides functionality for monitoring and deleting listings.
- * @async
- * @function userListing
- * @throws {Error} - Logs errors if listings cannot be fetched or updated.
- */
-
 import { readProfile, readUserListings } from '../../api/profile/read';
 import { onUpdateProfile } from '../../ui/profile/update';
 import { deleteListing } from '../../api/listing/delete';
@@ -118,17 +102,19 @@ export const renderProfilePage = async () => {
   outerContainer.appendChild(mainContainer);
 
   await userListing();
+  await userWins();
 };
 
 async function userListing() {
   const listingsContainer = document.getElementById('listingsContainer');
 
-  listingsContainer.innerHTML = '';
+  listingsContainer.innerHTML =
+    '<h3 class="text-xl font-semibold mb-4">Your Listings</h3>';
 
   try {
     const listings = await readUserListings();
     if (!listings || listings.length === 0) {
-      listingsContainer.innerHTML = '<p>No listings found.</p>';
+      listingsContainer.innerHTML += '<p>No listings found.</p>';
       return;
     }
 
@@ -213,6 +199,74 @@ async function userListing() {
     console.error('Error fetching user listings:', error);
     listingsContainer.innerHTML =
       '<p>Error loading listings. Please try again later.</p>';
+  }
+}
+
+async function userWins() {
+  const winsContainer = document.createElement('div');
+  winsContainer.id = 'winsContainer';
+  winsContainer.className = 'w-full mt-8';
+
+  const listingsContainer = document.getElementById('outerContainer');
+  listingsContainer.appendChild(winsContainer);
+
+  winsContainer.innerHTML =
+    '<h3 class="text-xl font-semibold mb-4">Won Listings</h3>';
+
+  try {
+    const userProfile = await readProfile(username);
+    const wins = userProfile.wins;
+
+    if (!wins || wins.length === 0) {
+      winsContainer.innerHTML += '<p>No won listings found.</p>';
+      return;
+    }
+
+    const winsGrid = document.createElement('div');
+    winsGrid.className = 'flex flex-wrap justify-center gap-6';
+    winsContainer.appendChild(winsGrid);
+
+    wins.forEach((win) => {
+      const card = document.createElement('div');
+      card.className =
+        'listing-card border p-4 rounded-lg shadow-md w-80 text-center bg-white hover:shadow-lg hover:scale-105 transition-transform';
+
+      const title = document.createElement('h2');
+      title.textContent = win.title || 'No Title';
+      title.className = 'font-bold text-lg mb-2';
+      card.appendChild(title);
+
+      if (win.media && win.media[0]?.url) {
+        const img = document.createElement('img');
+        img.src = win.media[0].url;
+        img.alt = win.title || 'Listing Image';
+        img.className = 'w-full h-48 object-cover mb-4 cursor-pointer rounded';
+
+        img.addEventListener('click', () => {
+          window.location.href = `/listing/?id=${win.id}`;
+          localStorage.setItem('listingId', JSON.stringify(win.id));
+        });
+
+        card.appendChild(img);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className =
+          'w-full h-48 bg-gray-200 flex items-center justify-center rounded mb-4';
+        placeholder.textContent = 'No Image';
+        card.appendChild(placeholder);
+      }
+
+      const auctionendsAt = document.createElement('p');
+      auctionendsAt.textContent = `Auction Ended: ${new Date(win.endsAt).toLocaleString()}`;
+      auctionendsAt.className = 'text-gray-600';
+      card.appendChild(auctionendsAt);
+
+      winsGrid.appendChild(card);
+    });
+  } catch (error) {
+    console.error('Error fetching won listings:', error);
+    winsContainer.innerHTML =
+      '<p>Error loading won listings. Please try again later.</p>';
   }
 }
 
