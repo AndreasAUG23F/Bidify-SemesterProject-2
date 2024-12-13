@@ -109,12 +109,13 @@ async function userListing() {
   const listingsContainer = document.getElementById('listingsContainer');
 
   listingsContainer.innerHTML =
-    '<h3 class="text-xl font-semibold mb-4">Your Listings</h3>';
+    '<h3 class="text-xl font-semibold mb-4 text-center">Your Listings</h3>';
 
   try {
     const listings = await readUserListings();
     if (!listings || listings.length === 0) {
-      listingsContainer.innerHTML += '<p>No listings found.</p>';
+      listingsContainer.innerHTML +=
+        '<p class="text-center">No listings found.</p>';
       return;
     }
 
@@ -149,6 +150,11 @@ async function userListing() {
         placeholder.textContent = 'No Image';
         card.appendChild(placeholder);
       }
+
+      const endsAt = document.createElement('p');
+      endsAt.textContent = `Auction Ends: ${new Date(listing.endsAt).toLocaleString()}`;
+      endsAt.className = 'text-gray-600 mb-2'; // Added endsAt display
+      card.appendChild(endsAt);
 
       const bidCount = document.createElement('p');
       bidCount.textContent = `Bids: ${listing._count?.bids || 0}`;
@@ -198,7 +204,7 @@ async function userListing() {
   } catch (error) {
     console.error('Error fetching user listings:', error);
     listingsContainer.innerHTML =
-      '<p>Error loading listings. Please try again later.</p>';
+      '<p class="text-center">Error loading listings. Please try again later.</p>';
   }
 }
 
