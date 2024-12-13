@@ -12,7 +12,7 @@ import { showLoader, hideLoader } from '../../ui/global/loader';
  * @throws {Error} - Logs errors if the API call fails.
  */
 export async function deleteListing(id) {
-  showLoader(); // Show loader before starting the delete operation
+  showLoader();
   try {
     const response = await fetch(`${AUCTION_LISTINGS}/${id}`, {
       method: 'DELETE',

@@ -16,10 +16,7 @@ import { API_AUTH_LOGIN } from '../constants';
 import { headers } from '../header';
 
 export async function login({ email, password }) {
-  const body = {
-    email: email,
-    password: password,
-  };
+  const body = { email, password };
 
   showLoader();
   try {
@@ -31,16 +28,30 @@ export async function login({ email, password }) {
     });
 
     if (response.ok) {
+      const data = await response.json();
       alert('User logged in');
       hideLoader();
       window.location.href = '/';
-      const data = await response.json();
       localStorage.setItem('token', JSON.stringify(data.data.accessToken));
       localStorage.setItem('userData', JSON.stringify(data.data));
       console.log(data);
+    } else {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Login failed');
     }
   } catch (error) {
-    alert('An error occurred');
-    console.error(error);
+    hideLoader();
+    displayError(error.message);
+    console.error('Login error:', error);
+  }
+}
+
+function displayError(message) {
+  const errorContainer = document.querySelector('#errorContainer');
+  if (errorContainer) {
+    errorContainer.textContent = message;
+    errorContainer.style.display = 'block';
+  } else {
+    alert(message);
   }
 }
