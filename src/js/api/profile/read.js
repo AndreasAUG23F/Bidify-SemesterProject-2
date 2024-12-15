@@ -59,7 +59,6 @@ export async function readUserListings() {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       return data.data;
     } else {
       console.error('Failed to fetch listings:', response.status);

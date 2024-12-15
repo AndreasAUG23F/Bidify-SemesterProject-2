@@ -22,8 +22,6 @@ export const updateProfile = async (username, avatar, banner, bio) => {
     bio: bio,
   };
 
-  console.log('body', body);
-
   try {
     const response = await fetch(`${AUCTION_PROFILES}/${username}`, {
       method: 'PUT',

@@ -103,7 +103,6 @@ function displayLoggedOutContent() {
 async function runPage() {
   try {
     const listings = await readListings();
-    console.log('Listings data:', listings);
     displayListings(listings);
     await initCarousel('#carouselContainer');
 

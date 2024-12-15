@@ -14,8 +14,6 @@ import { fetchBid } from '../../api/listing/bid';
 export const onBid = async (event) => {
   event.preventDefault();
 
-  console.log('click');
-
   const formData = new FormData(event.target);
 
   const bidAmount = formData.get('bidAmount');

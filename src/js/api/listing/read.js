@@ -13,7 +13,7 @@ import { headers } from '../header';
  */
 export async function readListing() {
   const id = new URLSearchParams(window.location.search).get('id');
-  showLoader(); // Show loader before starting the fetch
+  showLoader();
   try {
     const response = await fetch(
       `${AUCTION_LISTINGS}/${id}?_seller=true&_bids=true`,
@@ -24,7 +24,6 @@ export async function readListing() {
     );
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
       return data;
     } else {
       console.error('Failed to fetch post:', response.status);

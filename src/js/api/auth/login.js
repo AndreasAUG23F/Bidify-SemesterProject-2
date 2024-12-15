@@ -34,7 +34,6 @@ export async function login({ email, password }) {
       window.location.href = '/';
       localStorage.setItem('token', JSON.stringify(data.data.accessToken));
       localStorage.setItem('userData', JSON.stringify(data.data));
-      console.log(data);
     } else {
       const errorData = await response.json();
       throw new Error(errorData.message || 'Login failed');

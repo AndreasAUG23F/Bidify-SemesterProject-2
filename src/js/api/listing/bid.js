@@ -28,8 +28,6 @@ export const fetchBid = async (bidAmount, id) => {
     amount: parsedAmount,
   };
 
-  console.log('body', body);
-
   try {
     console.log('trying to fetch', body);
     const response = await fetch(`${AUCTION_LISTINGS}/${id}/bids`, {
@@ -40,7 +38,6 @@ export const fetchBid = async (bidAmount, id) => {
     console.log('response', response);
     if (response.ok) {
       const data = await response.json();
-      console.log('data', data);
       window.location.reload();
       return data.data;
     } else {
