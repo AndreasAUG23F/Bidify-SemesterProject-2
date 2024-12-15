@@ -1,3 +1,11 @@
+/**
+ * Dynamically creates and renders the header section of the website.
+ * Includes navigation links, a responsive menu toggle, and logout functionality for logged-in users.
+ * @module Header
+ * @function makeHeader
+ * @throws {Error} - Logs errors if the header element is not found or rendering fails.
+ */
+
 import { setLogoutListener } from '../global/logout';
 
 export const makeHeader = () => {
@@ -9,15 +17,17 @@ export const makeHeader = () => {
   nav.className =
     'flex flex-col md:flex-row items-center justify-between px-6 py-4';
 
-  const logoDiv = document.createElement('div');
-  logoDiv.className = 'flex-shrink-0';
+  const logoLink = document.createElement('a');
+  logoLink.href = '/';
+  logoLink.className = 'inline-block';
 
   const logoImg = document.createElement('img');
   logoImg.src = '/images/bidifyLogo.png';
   logoImg.alt = 'Logo';
-  logoImg.className = 'h-16 w-auto md:h-20';
+  logoImg.className =
+    'h-16 w-auto md:h-20 transition-transform transform hover:scale-110 duration-300';
 
-  logoDiv.appendChild(logoImg);
+  logoLink.append(logoImg);
 
   const navLinksDiv = document.createElement('div');
   navLinksDiv.className =
@@ -27,30 +37,41 @@ export const makeHeader = () => {
   homeLink.href = '/';
   homeLink.className = 'font-medium text-gray-700 hover:text-gray-900';
   homeLink.textContent = 'Home';
-  navLinksDiv.appendChild(homeLink);
+  navLinksDiv.append(homeLink);
 
   const loggedIn = localStorage.getItem('token');
 
   if (loggedIn) {
     const createListingLink = document.createElement('a');
-    createListingLink.href = '/create-listing';
+    createListingLink.href = '/listing/create/';
     createListingLink.className =
       'font-medium text-gray-700 hover:text-gray-900';
     createListingLink.textContent = 'Create Listing';
 
     const profileLink = document.createElement('a');
-    profileLink.href = '/profile';
+    profileLink.href = '/profile/';
     profileLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     profileLink.textContent = 'Profile';
 
-    navLinksDiv.appendChild(createListingLink);
-    navLinksDiv.appendChild(profileLink);
+    navLinksDiv.append(createListingLink, profileLink);
 
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logoutButton';
-    logoutButton.className = 'text-red-500 hover:text-red-400 font-medium';
+    logoutButton.className = `
+     bg-red-500
+     text-white
+     font-medium
+      py-2
+     px-4
+     rounded-lg
+     transform
+     transition
+     duration-300
+     hover:scale-105
+     hover:bg-red-600
+     `;
     logoutButton.textContent = 'Logout';
-    navLinksDiv.appendChild(logoutButton);
+    navLinksDiv.append(logoutButton);
   } else {
     const registerLink = document.createElement('a');
     registerLink.href = '/auth/register/';
@@ -62,12 +83,8 @@ export const makeHeader = () => {
     loginLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     loginLink.textContent = 'Login';
 
-    navLinksDiv.appendChild(registerLink);
-    navLinksDiv.appendChild(loginLink);
+    navLinksDiv.append(registerLink, loginLink);
   }
-
-  const iconDiv = document.createElement('div');
-  iconDiv.className = 'flex items-center';
 
   const menuToggle = document.createElement('button');
   menuToggle.className = 'block md:hidden text-gray-700 hover:text-gray-900';
@@ -75,44 +92,17 @@ export const makeHeader = () => {
   menuToggle.addEventListener('click', () => {
     navLinksDiv.classList.toggle('hidden');
     navLinksDiv.classList.toggle('flex');
-    nav.classList.toggle('flex-col');
-    nav.classList.toggle('flex-row');
-    nav.classList.toggle('justify-center');
   });
 
-  const largeScreenSearch = document.createElement('a');
-  largeScreenSearch.href = '#';
-  largeScreenSearch.className =
-    'hidden md:inline text-gray-700 hover:text-gray-900';
-
-  const largeScreenSearchIcon = document.createElement('i');
-  largeScreenSearchIcon.className =
-    'fa-solid fa-magnifying-glass text-2xl md:text-3xl';
-  largeScreenSearch.appendChild(largeScreenSearchIcon);
-
-  iconDiv.appendChild(menuToggle);
-  iconDiv.appendChild(largeScreenSearch);
-
-  nav.appendChild(logoDiv);
-  nav.appendChild(navLinksDiv);
-  nav.appendChild(iconDiv);
-
+  nav.append(logoLink, navLinksDiv, menuToggle);
   header.appendChild(nav);
 
   const mediaQuery = window.matchMedia('(max-width: 768px)');
   const handleMediaChange = (e) => {
     if (e.matches) {
-      nav.classList.remove('flex-col');
-      nav.classList.add('flex-row');
-      nav.classList.add('justify-center');
-      if (!navLinksDiv.classList.contains('hidden')) {
-        navLinksDiv.classList.add('hidden');
-        navLinksDiv.classList.remove('flex');
-      }
+      navLinksDiv.classList.add('hidden');
+      navLinksDiv.classList.remove('flex');
     } else {
-      nav.classList.add('flex-col');
-      nav.classList.remove('flex-row');
-      nav.classList.remove('justify-center');
       navLinksDiv.classList.remove('hidden');
       navLinksDiv.classList.add('flex');
     }
@@ -121,6 +111,5 @@ export const makeHeader = () => {
   mediaQuery.addEventListener('change', handleMediaChange);
   handleMediaChange(mediaQuery);
 
-  // Attach logout listener after the header is rendered
   setLogoutListener();
 };

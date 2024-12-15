@@ -1,8 +1,9 @@
-/* import { onRegister } from "../../ui/auth/register";
-
-const form = document.forms.register;
-
-form.addEventListener("submit", onRegister); */
+/**
+ * Initializes the registration page.
+ * Attaches a submit event listener to the registration form if it exists.
+ * Logs an error if the form is not found in the DOM.
+ * @module RegisterPage
+ */
 
 import { onRegister } from '../../ui/auth/register.js';
 

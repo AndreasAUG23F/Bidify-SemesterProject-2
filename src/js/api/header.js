@@ -1,19 +1,27 @@
-import { API_KEY } from "./constants";
+/**
+ * Generates HTTP headers for API requests.
+ * Includes the API key and authorization token if available.
+ * @module Headers
+ * @function headers
+ * @returns {Headers} - An instance of the Headers object containing the necessary headers.
+ */
 
-const accessToken = localStorage.getItem("accessToken");
+import { API_KEY } from './constants';
+
+const token = JSON.parse(localStorage.getItem('token'));
+
 export function headers() {
-  const headers = new Headers({
-  });
+  const headers = new Headers();
 
   if (API_KEY) {
-    headers.append("X-Noroff-API-Key", API_KEY);
+    headers.append('X-Noroff-API-Key', API_KEY);
   }
 
-  if (accessToken) {
-    headers.append("Authorization", `Bearer ${accessToken}`);
+  if (token) {
+    headers.append('Authorization', `Bearer ${token}`);
   }
 
-  headers.append("content-type", "application/json");
-  
+  headers.append('content-type', 'application/json');
+
   return headers;
 }
