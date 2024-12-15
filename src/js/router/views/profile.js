@@ -107,67 +107,71 @@ export const renderProfilePage = async () => {
 
 async function userListing() {
   const listingsContainer = document.getElementById('listingsContainer');
-
-  listingsContainer.innerHTML =
-    '<h3 class="text-xl font-semibold mb-4 text-center">Your Listings</h3>';
+  listingsContainer.innerHTML = `
+      <h3 class="text-5xl font-bold text-center mb-6">Your Listings</h3>
+      <div id="listingsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    `;
 
   try {
     const listings = await readUserListings();
+    const listingsGrid = document.getElementById('listingsGrid');
+
     if (!listings || listings.length === 0) {
-      listingsContainer.innerHTML +=
-        '<p class="text-center">No listings found.</p>';
+      listingsGrid.innerHTML = '<p class="text-center">No listings found.</p>';
       return;
     }
-
-    listingsContainer.className = 'flex flex-wrap justify-center gap-6';
 
     listings.forEach((listing) => {
       const card = document.createElement('div');
       card.className =
-        'listing-card border p-4 rounded-lg shadow-md w-80 text-center bg-white hover:shadow-lg hover:scale-105 transition-transform';
+        'flex border rounded-lg shadow-md bg-white hover:shadow-lg transition-transform p-4';
 
-      const title = document.createElement('h2');
-      title.textContent = listing.title || 'No Title';
-      title.className = 'font-bold text-lg mb-2';
-      card.appendChild(title);
-
+      const imageContainer = document.createElement('div');
+      imageContainer.className = 'flex-shrink-0';
       if (listing.media && listing.media[0]?.url) {
         const img = document.createElement('img');
         img.src = listing.media[0].url;
         img.alt = listing.title || 'Listing Image';
-        img.className = 'w-full h-48 object-cover mb-4 cursor-pointer rounded';
-
+        img.className =
+          'w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg cursor-pointer';
         img.addEventListener('click', () => {
           window.location.href = `/listing/?id=${listing.id}`;
           localStorage.setItem('listingId', JSON.stringify(listing.id));
         });
-
-        card.appendChild(img);
+        imageContainer.appendChild(img);
       } else {
         const placeholder = document.createElement('div');
         placeholder.className =
-          'w-full h-48 bg-gray-200 flex items-center justify-center rounded mb-4';
+          'w-24 h-24 bg-gray-200 flex items-center justify-center rounded-full border-4 border-white shadow-lg';
         placeholder.textContent = 'No Image';
-        card.appendChild(placeholder);
+        imageContainer.appendChild(placeholder);
       }
+      card.appendChild(imageContainer);
+
+      const contentContainer = document.createElement('div');
+      contentContainer.className = 'ml-4 flex flex-col justify-between flex-1';
+
+      const title = document.createElement('h2');
+      title.textContent = listing.title || 'No Title';
+      title.className = 'font-bold text-lg mb-1';
 
       const endsAt = document.createElement('p');
-      endsAt.textContent = `Auction Ends: ${new Date(listing.endsAt).toLocaleString()}`;
-      endsAt.className = 'text-gray-600 mb-2'; // Added endsAt display
-      card.appendChild(endsAt);
+      endsAt.textContent = `Auction Ends: ${new Date(
+        listing.endsAt
+      ).toLocaleString()}`;
+      endsAt.className = 'text-gray-600 text-sm mb-1';
 
       const bidCount = document.createElement('p');
       bidCount.textContent = `Bids: ${listing._count?.bids || 0}`;
-      bidCount.className = 'text-gray-600';
-      card.appendChild(bidCount);
+      bidCount.className = 'text-gray-600 text-sm mb-2';
 
       const buttonContainer = document.createElement('div');
-      buttonContainer.className = 'flex justify-center gap-4 mt-4';
+      buttonContainer.className = 'flex gap-2 mt-2';
 
       const monitorButton = document.createElement('button');
-      monitorButton.textContent = 'Monitor Listing';
+      monitorButton.textContent = 'Monitor';
       monitorButton.className =
-        'bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition';
+        'bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition';
       monitorButton.addEventListener('click', () => {
         window.location.href = `/listing/?id=${listing.id}`;
         localStorage.setItem('listingId', JSON.stringify(listing.id));
@@ -176,7 +180,7 @@ async function userListing() {
       const deleteButton = document.createElement('button');
       deleteButton.textContent = 'Delete';
       deleteButton.className =
-        'bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition';
+        'bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition';
       deleteButton.addEventListener('click', async (event) => {
         event.stopPropagation();
         const confirmDelete = confirm(
@@ -197,14 +201,19 @@ async function userListing() {
       buttonContainer.appendChild(monitorButton);
       buttonContainer.appendChild(deleteButton);
 
-      card.appendChild(buttonContainer);
+      contentContainer.appendChild(title);
+      contentContainer.appendChild(endsAt);
+      contentContainer.appendChild(bidCount);
+      contentContainer.appendChild(buttonContainer);
 
-      listingsContainer.appendChild(card);
+      card.appendChild(contentContainer);
+      listingsGrid.appendChild(card);
     });
   } catch (error) {
     console.error('Error fetching user listings:', error);
-    listingsContainer.innerHTML =
-      '<p class="text-center">Error loading listings. Please try again later.</p>';
+    listingsContainer.innerHTML += `
+        <p class="text-center text-red-600">Error loading listings. Please try again later.</p>
+      `;
   }
 }
 
@@ -216,63 +225,78 @@ async function userWins() {
   const listingsContainer = document.getElementById('outerContainer');
   listingsContainer.appendChild(winsContainer);
 
-  winsContainer.innerHTML =
-    '<h3 class="text-xl font-semibold mb-4">Won Listings</h3>';
+  winsContainer.innerHTML = `
+    <h3 class="text-5xl font-bold text-center mb-6">Won Listings</h3>
+    <div id="winsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  `;
 
   try {
     const userProfile = await readProfile(username);
     const wins = userProfile.wins;
 
     if (!wins || wins.length === 0) {
-      winsContainer.innerHTML += '<p>No won listings found.</p>';
+      const winsGrid = document.getElementById('winsGrid');
+      winsGrid.innerHTML = '<p class="text-center">No won listings found.</p>';
       return;
     }
 
-    const winsGrid = document.createElement('div');
-    winsGrid.className = 'flex flex-wrap justify-center gap-6';
-    winsContainer.appendChild(winsGrid);
+    const winsGrid = document.getElementById('winsGrid');
 
     wins.forEach((win) => {
       const card = document.createElement('div');
       card.className =
-        'listing-card border p-4 rounded-lg shadow-md w-80 text-center bg-white hover:shadow-lg hover:scale-105 transition-transform';
+        'flex border rounded-lg shadow-md bg-white hover:shadow-lg transition-transform p-4';
 
-      const title = document.createElement('h2');
-      title.textContent = win.title || 'No Title';
-      title.className = 'font-bold text-lg mb-2';
-      card.appendChild(title);
+      const imageContainer = document.createElement('div');
+      imageContainer.className = 'flex-shrink-0';
 
       if (win.media && win.media[0]?.url) {
         const img = document.createElement('img');
         img.src = win.media[0].url;
         img.alt = win.title || 'Listing Image';
-        img.className = 'w-full h-48 object-cover mb-4 cursor-pointer rounded';
+        img.className =
+          'w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg cursor-pointer';
 
         img.addEventListener('click', () => {
           window.location.href = `/listing/?id=${win.id}`;
           localStorage.setItem('listingId', JSON.stringify(win.id));
         });
 
-        card.appendChild(img);
+        imageContainer.appendChild(img);
       } else {
         const placeholder = document.createElement('div');
         placeholder.className =
-          'w-full h-48 bg-gray-200 flex items-center justify-center rounded mb-4';
+          'w-24 h-24 bg-gray-200 flex items-center justify-center rounded-full border-4 border-white shadow-lg';
         placeholder.textContent = 'No Image';
-        card.appendChild(placeholder);
+        imageContainer.appendChild(placeholder);
       }
 
-      const auctionendsAt = document.createElement('p');
-      auctionendsAt.textContent = `Auction Ended: ${new Date(win.endsAt).toLocaleString()}`;
-      auctionendsAt.className = 'text-gray-600';
-      card.appendChild(auctionendsAt);
+      card.appendChild(imageContainer);
 
+      const contentContainer = document.createElement('div');
+      contentContainer.className = 'ml-4 flex flex-col justify-between flex-1';
+
+      const title = document.createElement('h2');
+      title.textContent = win.title || 'No Title';
+      title.className = 'font-bold text-lg mb-1';
+
+      const auctionEndsAt = document.createElement('p');
+      auctionEndsAt.textContent = `Auction Ended: ${new Date(
+        win.endsAt
+      ).toLocaleString()}`;
+      auctionEndsAt.className = 'text-gray-600 text-sm mb-1';
+
+      contentContainer.appendChild(title);
+      contentContainer.appendChild(auctionEndsAt);
+
+      card.appendChild(contentContainer);
       winsGrid.appendChild(card);
     });
   } catch (error) {
     console.error('Error fetching won listings:', error);
-    winsContainer.innerHTML =
-      '<p>Error loading won listings. Please try again later.</p>';
+    const winsGrid = document.getElementById('winsGrid');
+    winsGrid.innerHTML =
+      '<p class="text-center text-red-600">Error loading won listings. Please try again later.</p>';
   }
 }
 
