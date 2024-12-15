@@ -85,7 +85,7 @@ The application should now be running on http://localhost:5173.
 
 ## Live Demo
 
-The live version of the project will be available soon once deployed.
+https://bidify-semesterproject.netlify.app/
 
 Authors
 • Andreasjoa23
