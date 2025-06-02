@@ -4,17 +4,19 @@
  * @module AuthGuard
  * @function authGuard
  * @description
- * Redirects the user to the login page if they are not authenticated.
- * Displays an alert message to inform the user about the need to log in.
+ * Redirects unauthenticated users to the login page with an alert.
  *
  * @example
- * // Add this to pages that require authentication
+ * // Call this at the top of protected pages
  * authGuard();
  */
 
 export function authGuard() {
-  if (!localStorage.token) {
-    alert('You must be logged in to view this page');
+  const token = localStorage.getItem('token');
+  const userData = localStorage.getItem('userData');
+
+  if (!token || !userData) {
+    alert('You must be logged in to view this page.');
     window.location.href = '/auth/login/';
   }
 }

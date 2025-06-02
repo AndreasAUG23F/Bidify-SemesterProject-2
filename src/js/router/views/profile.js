@@ -4,113 +4,30 @@
  * @module ProfilePage
  */
 
-import { readProfile, readUserListings } from '../../api/profile/read';
+import readProfile from '../../api/profile/readProfile';
+import readUserListings from '../../api/profile/readUserListings';
+import deleteListing from '../../api/listing/deleteListing';
 import { onUpdateProfile } from '../../ui/profile/update';
-import { deleteListing } from '../../api/listing/delete';
-
-const form = document.getElementById('updateProfile');
-form.addEventListener('submit', onUpdateProfile);
 
 const userData = JSON.parse(localStorage.getItem('userData'));
+if (!userData || !userData.name) {
+  console.error('User not logged in.');
+  document.body.innerHTML =
+    '<p>You must be logged in to view your profile.</p>';
+  throw new Error('User not logged in.');
+}
 const username = userData.name;
-
-export const renderProfilePage = async () => {
-  const outerContainer = document.getElementById('outerContainer');
-  outerContainer.innerHTML = '';
-
-  const mainContainer = document.createElement('div');
-  mainContainer.className = 'flex flex-col items-center w-full';
-
-  const userProfile = await readProfile(username);
-
-  const profileContainer = document.createElement('div');
-  profileContainer.className = 'flex flex-col items-center w-full';
-
-  const bannerContainer = document.createElement('div');
-  bannerContainer.className = 'relative w-full';
-  bannerContainer.style.minHeight = '40vh';
-  bannerContainer.style.backgroundImage = `url(${userProfile.banner?.url || 'default-banner.png'})`;
-  bannerContainer.style.backgroundSize = 'cover';
-  bannerContainer.style.backgroundPosition = 'center';
-
-  const avatarContainer = document.createElement('div');
-  avatarContainer.className =
-    'absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32';
-  const avatar = document.createElement('img');
-  avatar.src = userProfile.avatar?.url || 'default-avatar.png';
-  avatar.alt = 'User Avatar';
-  avatar.className =
-    'w-full h-full rounded-full border-4 border-white shadow-lg object-cover';
-  avatarContainer.appendChild(avatar);
-  bannerContainer.appendChild(avatarContainer);
-
-  const nameElement = document.createElement('h2');
-  nameElement.innerText = username;
-  nameElement.className = 'text-xl font-semibold mt-16 text-center';
-
-  const bioElement = document.createElement('p');
-  bioElement.innerText = userProfile.bio || 'No bio available.';
-  bioElement.className = 'text-gray-500 mt-2 text-center';
-
-  const coinsElement = document.createElement('div');
-  coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
-  coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.credits || 0}</span>
-                          <i class="fa-solid fa-coins text-yellow-500"></i>`;
-
-  const updateProfileButton = document.createElement('button');
-  updateProfileButton.innerText = 'Update Profile';
-  updateProfileButton.className =
-    'mt-9 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
-  const updateProfileDiv = document.getElementById('updateProfileDiv');
-  updateProfileDiv.style.position = 'absolute';
-  updateProfileDiv.style.top = '50%';
-  updateProfileDiv.style.left = '50%';
-  updateProfileDiv.style.transform = 'translate(-50%, -50%)';
-  updateProfileDiv.style.zIndex = '10';
-
-  updateProfileButton.addEventListener('click', () => {
-    updateProfileDiv.classList.remove('hidden');
-  });
-
-  profileContainer.append(
-    bannerContainer,
-    nameElement,
-    bioElement,
-    coinsElement,
-    updateProfileButton
-  );
-
-  const closeProfileButton = document.getElementById('closeProfileButton');
-  if (closeProfileButton) {
-    closeProfileButton.style.position = 'absolute';
-    closeProfileButton.style.top = '10px';
-    closeProfileButton.style.right = '10px';
-    closeProfileButton.style.zIndex = '15';
-
-    closeProfileButton.addEventListener('click', () => {
-      updateProfileDiv.classList.add('hidden');
-    });
-  }
-
-  mainContainer.appendChild(profileContainer);
-
-  const listingsContainer = document.createElement('div');
-  listingsContainer.id = 'listingsContainer';
-  listingsContainer.className = 'w-full mt-8';
-  mainContainer.appendChild(listingsContainer);
-
-  outerContainer.appendChild(mainContainer);
-
-  await userListing();
-  await userWins();
-};
+const form = document.getElementById('updateProfile');
+if (form) {
+  form.addEventListener('submit', onUpdateProfile);
+}
 
 async function userListing() {
   const listingsContainer = document.getElementById('listingsContainer');
   listingsContainer.innerHTML = `
-      <h3 class="text-5xl font-bold text-center mb-6">Your Listings</h3>
-      <div id="listingsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    `;
+    <h3 class="text-5xl font-bold text-center mb-6">Your Listings</h3>
+    <div id="listingsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  `;
 
   try {
     const listings = await readUserListings();
@@ -128,6 +45,7 @@ async function userListing() {
 
       const imageContainer = document.createElement('div');
       imageContainer.className = 'flex-shrink-0';
+
       if (listing.media && listing.media[0]?.url) {
         const img = document.createElement('img');
         img.src = listing.media[0].url;
@@ -146,6 +64,7 @@ async function userListing() {
         placeholder.textContent = 'No Image';
         imageContainer.appendChild(placeholder);
       }
+
       card.appendChild(imageContainer);
 
       const contentContainer = document.createElement('div');
@@ -190,7 +109,7 @@ async function userListing() {
           try {
             await deleteListing(listing.id);
             alert('Listing deleted successfully.');
-            userListing();
+            userListing(); // reload listings
           } catch (error) {
             console.error('Error deleting listing:', error);
             alert('Failed to delete listing. Please try again later.');
@@ -212,8 +131,8 @@ async function userListing() {
   } catch (error) {
     console.error('Error fetching user listings:', error);
     listingsContainer.innerHTML += `
-        <p class="text-center text-red-600">Error loading listings. Please try again later.</p>
-      `;
+      <p class="text-center text-red-600">Error loading listings. Please try again later.</p>
+    `;
   }
 }
 
@@ -256,12 +175,10 @@ async function userWins() {
         img.alt = win.title || 'Listing Image';
         img.className =
           'w-24 h-24 object-cover rounded-full border-4 border-white shadow-lg cursor-pointer';
-
         img.addEventListener('click', () => {
           window.location.href = `/listing/?id=${win.id}`;
           localStorage.setItem('listingId', JSON.stringify(win.id));
         });
-
         imageContainer.appendChild(img);
       } else {
         const placeholder = document.createElement('div');
@@ -299,5 +216,103 @@ async function userWins() {
       '<p class="text-center text-red-600">Error loading won listings. Please try again later.</p>';
   }
 }
+
+export const renderProfilePage = async () => {
+  const outerContainer = document.getElementById('outerContainer');
+  if (!outerContainer) return;
+
+  outerContainer.innerHTML = '';
+
+  const mainContainer = document.createElement('div');
+  mainContainer.className = 'flex flex-col items-center w-full';
+
+  const userProfile = await readProfile(username);
+
+  const profileContainer = document.createElement('div');
+  profileContainer.className = 'flex flex-col items-center w-full';
+
+  const bannerContainer = document.createElement('div');
+  bannerContainer.className = 'relative w-full';
+  bannerContainer.style.minHeight = '40vh';
+  bannerContainer.style.backgroundImage = `url(${userProfile.banner?.url || 'default-banner.png'})`;
+  bannerContainer.style.backgroundSize = 'cover';
+  bannerContainer.style.backgroundPosition = 'center';
+
+  const avatarContainer = document.createElement('div');
+  avatarContainer.className =
+    'absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32';
+
+  const avatar = document.createElement('img');
+  avatar.src = userProfile.avatar?.url || 'default-avatar.png';
+  avatar.alt = 'User Avatar';
+  avatar.className =
+    'w-full h-full rounded-full border-4 border-white shadow-lg object-cover';
+
+  avatarContainer.appendChild(avatar);
+  bannerContainer.appendChild(avatarContainer);
+
+  const nameElement = document.createElement('h2');
+  nameElement.innerText = username;
+  nameElement.className = 'text-xl font-semibold mt-16 text-center';
+
+  const bioElement = document.createElement('p');
+  bioElement.innerText = userProfile.bio || 'No bio available.';
+  bioElement.className = 'text-gray-500 mt-2 text-center';
+
+  const coinsElement = document.createElement('div');
+  coinsElement.className = 'flex items-center space-x-2 text-gray-600 mt-2';
+  coinsElement.innerHTML = `<span class="text-lg font-medium">${userProfile.credits || 0}</span>
+                          <i class="fa-solid fa-coins text-yellow-500"></i>`;
+
+  const updateProfileButton = document.createElement('button');
+  updateProfileButton.innerText = 'Update Profile';
+  updateProfileButton.className =
+    'mt-9 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition';
+
+  const updateProfileDiv = document.getElementById('updateProfileDiv');
+  if (updateProfileDiv) {
+    updateProfileDiv.style.position = 'absolute';
+    updateProfileDiv.style.top = '50%';
+    updateProfileDiv.style.left = '50%';
+    updateProfileDiv.style.transform = 'translate(-50%, -50%)';
+    updateProfileDiv.style.zIndex = '10';
+
+    updateProfileButton.addEventListener('click', () => {
+      updateProfileDiv.classList.remove('hidden');
+    });
+
+    const closeProfileButton = document.getElementById('closeProfileButton');
+    if (closeProfileButton) {
+      closeProfileButton.style.position = 'absolute';
+      closeProfileButton.style.top = '10px';
+      closeProfileButton.style.right = '10px';
+      closeProfileButton.style.zIndex = '15';
+
+      closeProfileButton.addEventListener('click', () => {
+        updateProfileDiv.classList.add('hidden');
+      });
+    }
+  }
+
+  profileContainer.append(
+    bannerContainer,
+    nameElement,
+    bioElement,
+    coinsElement,
+    updateProfileButton
+  );
+
+  mainContainer.appendChild(profileContainer);
+
+  const listingsContainer = document.createElement('div');
+  listingsContainer.id = 'listingsContainer';
+  listingsContainer.className = 'w-full mt-8';
+  mainContainer.appendChild(listingsContainer);
+
+  outerContainer.appendChild(mainContainer);
+
+  await userListing();
+  await userWins();
+};
 
 renderProfilePage();

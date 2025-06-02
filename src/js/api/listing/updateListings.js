@@ -17,7 +17,7 @@ import { showLoader, hideLoader } from '../../ui/global/loader';
  * @returns {Promise<Object|null>} - Returns the updated listing data if successful, or null if the update fails.
  * @throws {Error} - Logs errors if the API call fails.
  */
-export async function updateListing(
+export default async function updateListing(
   listingId,
   { title, description, tags, media }
 ) {

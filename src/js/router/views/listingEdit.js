@@ -19,7 +19,7 @@
  */
 
 import { authGuard } from '../../utilities/authGuard';
-import { readListing } from '../../api/listing/read';
+import readListing from '../../api/listing/read/readListing';
 import { onUpdateListing } from '../../ui/listing/update';
 
 authGuard();

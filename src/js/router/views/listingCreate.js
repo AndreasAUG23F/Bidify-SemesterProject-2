@@ -4,16 +4,17 @@
  * @module CreateListingPage
  */
 
-/**
- * Attaches a submission event listener to the create listing form.
- * Redirects unauthorized users to the login page.
- * @function
- */
-
 import { onCreateListing } from '../../ui/listing/create';
 import { authGuard } from '../../utilities/authGuard';
 
+// Ensure user is logged in before allowing access
+authGuard();
+
+// Get the form and bind submit event if it exists
 const form = document.forms.createListing;
 
-form.addEventListener('submit', onCreateListing);
-authGuard();
+if (form) {
+  form.addEventListener('submit', onCreateListing);
+} else {
+  console.error("Form 'createListing' not found in the DOM.");
+}

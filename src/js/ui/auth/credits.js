@@ -18,8 +18,8 @@ export const fetchUserCredits = async () => {
       return null;
     }
 
-    const userData = localStorage.getItem('userData');
-    if (!userData) {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (!userData?.name) {
       console.error('Username is missing in localStorage');
       return null;
     }
@@ -36,7 +36,7 @@ export const fetchUserCredits = async () => {
     }
 
     const data = await response.json();
-    return data.credits; // Returner kun credits
+    return data.credits ?? null;
   } catch (error) {
     console.error('Error fetching user credits:', error);
     return null;

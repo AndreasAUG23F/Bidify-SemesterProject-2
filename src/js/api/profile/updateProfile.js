@@ -1,3 +1,6 @@
+import { AUCTION_PROFILES } from '../constants';
+import { headers } from '../header';
+
 /**
  * Updates a user's profile information, including avatar, banner, and bio.
  * Sends a PUT request to the API to update the profile data.
@@ -11,15 +14,11 @@
  * @returns {Promise<Object|undefined>} - Returns the updated profile data if successful, or undefined if an error occurs.
  * @throws {Error} - Logs errors if the API call fails.
  */
-
-import { AUCTION_PROFILES } from '../constants';
-import { headers } from '../header';
-
-export const updateProfile = async (username, avatar, banner, bio) => {
+export default async function updateProfile(username, avatar, banner, bio) {
   const body = {
-    avatar: avatar,
-    banner: banner,
-    bio: bio,
+    avatar,
+    banner,
+    bio,
   };
 
   try {
@@ -36,4 +35,4 @@ export const updateProfile = async (username, avatar, banner, bio) => {
   } catch (error) {
     console.error('Error updating profile:', error);
   }
-};
+}

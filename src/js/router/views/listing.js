@@ -7,7 +7,7 @@
  * @throws {Error} - Logs errors if fetching or rendering fails.
  */
 
-import { readListing } from '../../api/listing/read';
+import readListing from '../../api/listing/read/readListing';
 import { renderListingDetails } from '../../ui/listing/listing';
 
 async function loadListingDetails() {

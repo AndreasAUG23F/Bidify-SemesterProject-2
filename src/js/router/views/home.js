@@ -38,7 +38,8 @@
  */
 
 import { displayListings } from '../../ui/listing/makeListing';
-import { readListings } from '../../api/listing/read';
+import readListings from '../../api/listing/read/readListings';
+
 import { initCarousel } from '../../ui/global/carousel';
 import { initSearch } from '../../ui/global/search';
 

@@ -1,15 +1,17 @@
 /**
  * Dynamically creates and renders the footer section of the website.
- * Includes navigation links, copyright information, and handles logout functionality for logged-in users.
+ * Includes navigation links, copyright,
+ * and handles logout functionality for logged-in users.
  * @module Footer
  * @function makeFooter
- * @throws {Error} - Logs errors if the footer element is not found or rendering fails.
  */
-
-import { setLogoutListener } from '../global/logout';
 
 export const makeFooter = () => {
   const footer = document.querySelector('footer');
+  if (!footer) {
+    console.error('<footer> element not found in the DOM.');
+    return;
+  }
 
   footer.innerHTML = '';
 
@@ -21,13 +23,10 @@ export const makeFooter = () => {
     'flex flex-col lg:flex-row justify-between items-center space-y-12 lg:space-y-0 lg:space-x-16';
 
   const logoDiv = document.createElement('div');
-  logoDiv.className = 'flex-shrink-0';
-
   const logoImg = document.createElement('img');
   logoImg.src = '/images/bidifyLogo.png';
   logoImg.alt = 'Bidify Logo';
   logoImg.className = 'h-14 w-auto';
-
   logoDiv.appendChild(logoImg);
 
   const nav = document.createElement('nav');
@@ -36,60 +35,47 @@ export const makeFooter = () => {
 
   const homeLink = document.createElement('a');
   homeLink.href = '/';
-  homeLink.className = 'hover:text-blue-500';
   homeLink.textContent = 'Home';
+  homeLink.className = 'hover:text-blue-500';
+  nav.appendChild(homeLink);
 
-  const loggedIn = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-  if (loggedIn) {
+  if (token) {
     const profileLink = document.createElement('a');
     profileLink.href = '/profile/';
-    profileLink.className = 'hover:text-blue-500';
     profileLink.textContent = 'Profile';
+    profileLink.className = 'hover:text-blue-500';
 
     const logoutButton = document.createElement('button');
     logoutButton.textContent = 'Logout';
     logoutButton.id = 'logoutButton';
     logoutButton.className = `
-  bg-red-500 
-  text-white 
-  font-medium 
-  py-2 
-  px-4 
-  rounded-lg 
-  transform 
-  transition 
-  duration-300 
-  hover:scale-105 
-  hover:bg-red-600
-`;
+      bg-red-500 text-white font-medium py-2 px-4 rounded-lg 
+      transform transition duration-300 hover:scale-105 hover:bg-red-600
+    `;
     logoutButton.addEventListener('click', () => {
       localStorage.removeItem('token');
       localStorage.removeItem('userData');
       window.location.href = '/';
     });
 
-    nav.appendChild(homeLink);
-    nav.appendChild(profileLink);
-    nav.appendChild(logoutButton);
+    nav.append(profileLink, logoutButton);
   } else {
     const registerLink = document.createElement('a');
     registerLink.href = '/auth/register/';
-    registerLink.className = 'hover:text-blue-500';
     registerLink.textContent = 'Register';
+    registerLink.className = 'hover:text-blue-500';
 
     const loginLink = document.createElement('a');
     loginLink.href = '/auth/login/';
-    loginLink.className = 'hover:text-blue-500';
     loginLink.textContent = 'Login';
+    loginLink.className = 'hover:text-blue-500';
 
-    nav.appendChild(homeLink);
-    nav.appendChild(registerLink);
-    nav.appendChild(loginLink);
+    nav.append(registerLink, loginLink);
   }
 
-  topSection.appendChild(logoDiv);
-  topSection.appendChild(nav);
+  topSection.append(logoDiv, nav);
 
   const divider = document.createElement('div');
   divider.className = 'border-t border-gray-300 my-12';
@@ -107,25 +93,17 @@ export const makeFooter = () => {
 
   const privacyLink = document.createElement('a');
   privacyLink.href = '/privacy-policy';
-  privacyLink.className = 'hover:text-blue-500';
   privacyLink.textContent = 'Privacy Policy';
+  privacyLink.className = 'hover:text-blue-500';
 
   const termsLink = document.createElement('a');
   termsLink.href = '/terms-of-service';
-  termsLink.className = 'hover:text-blue-500';
   termsLink.textContent = 'Terms of Service';
+  termsLink.className = 'hover:text-blue-500';
 
-  bottomNav.appendChild(privacyLink);
-  bottomNav.appendChild(termsLink);
+  bottomNav.append(privacyLink, termsLink);
+  bottomSection.append(copyright, bottomNav);
 
-  bottomSection.appendChild(copyright);
-  bottomSection.appendChild(bottomNav);
-
-  container.appendChild(topSection);
-  container.appendChild(divider);
-  container.appendChild(bottomSection);
-
+  container.append(topSection, divider, bottomSection);
   footer.appendChild(container);
 };
-
-setLogoutListener();

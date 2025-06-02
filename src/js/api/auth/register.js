@@ -1,3 +1,7 @@
+import { hideLoader, showLoader } from '../../ui/global/loader';
+import { API_AUTH_REGISTER } from '../constants';
+import { headers } from '../header';
+
 /**
  * Handles user registration by sending user details to the registration API.
  * Redirects the user to the login page upon successful registration.
@@ -12,13 +16,9 @@
  * @returns {Promise<void>} - No return value.
  * @throws {Error} - Logs and alerts errors if the registration request fails.
  */
-
-import { hideLoader, showLoader } from '../../ui/global/loader';
-import { API_AUTH_REGISTER } from '../constants';
-import { headers } from '../header';
-
-export async function register({ name, email, password }) {
+export default async function register({ name, email, password }) {
   const emailPattern = /^[\w.-]+@(?:stud\.)?noroff\.no$/;
+
   if (!name || name.length > 20) {
     alert('Name must be max 20 characters and contain valid characters.');
     return;

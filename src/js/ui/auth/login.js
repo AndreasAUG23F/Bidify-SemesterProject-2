@@ -1,12 +1,15 @@
-import { login } from '../../api/auth/login.js';
-
 /**
  * Handles the login form submission.
- *
- * @param {Event} event - The event object representing the form submission.
- * Prevents the default form submission behavior, gathers the form data,
- * and calls the login function with the collected email and password.
+ * Prevents default form behavior, gathers input data,
+ * and calls the login function.
+ * @module LoginHandler
+ * @async
+ * @function onLogin
+ * @param {Event} event - The form submission event.
  */
+
+import login from '/src/js/api/auth/login.js';
+
 export async function onLogin(event) {
   event.preventDefault();
 
@@ -17,5 +20,10 @@ export async function onLogin(event) {
     password: formData.get('password'),
   };
 
-  login(loginData);
+  try {
+    await login(loginData);
+  } catch (error) {
+    console.error('Login failed:', error);
+    alert('Login failed. Please check your credentials.');
+  }
 }

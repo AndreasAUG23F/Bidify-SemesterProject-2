@@ -1,7 +1,14 @@
 import { API_AUTH_KEY } from '../constants';
 import { headers } from '../header';
 
-export async function getKey() {
+/**
+ * Requests and stores an API key in localStorage.
+ * @async
+ * @function getKey
+ * @returns {Promise<void>} - No return value.
+ * @throws {Error} - Logs and alerts errors if the request fails.
+ */
+export default async function getKey() {
   const body = {
     name: 'ApiKey',
   };
@@ -19,6 +26,6 @@ export async function getKey() {
     }
   } catch (error) {
     console.log(error);
-    alert('something went wrong trying to get apiKey');
+    alert('Something went wrong trying to get API key');
   }
 }

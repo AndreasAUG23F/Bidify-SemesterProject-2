@@ -1,42 +1,46 @@
 /**
- * Handles the process of updating a user's profile.
- *
+ * Handles updating the user's profile (avatar, banner, bio).
  * @module UpdateProfile
  * @function onUpdateProfile
  * @async
- * @param {Event} event - The form submission event.
- * @returns {Promise<void>} Sends the updated profile data to the API.
- *
- * @description
- * Extracts form data to update the user's profile, including avatar, banner, and bio. Uses the API to save the changes.
- *
- * @example
- * <form onsubmit="onUpdateProfile(event)">
- *   <input type="text" name="avatar" placeholder="Avatar URL" />
- *   <input type="text" name="banner" placeholder="Banner URL" />
- *   <textarea name="bio" placeholder="Your bio"></textarea>
- *   <button type="submit">Update Profile</button>
- * </form>
+ * @param {Event} event - Form submission event.
+ * @returns {Promise<void>}
  */
 
-import { updateProfile } from '../../api/profile/update';
+import updateProfile from '../../api/profile/updateProfile';
 
 export const onUpdateProfile = async (event) => {
   event.preventDefault();
+
   const formData = new FormData(event.target);
+
   const userData = JSON.parse(localStorage.getItem('userData'));
+
+  if (!userData || !userData.name) {
+    console.error('User not logged in or missing username.');
+    alert('You must be logged in to update your profile.');
+    return;
+  }
+
   const username = userData.name;
+
   const avatar = {
-    url: formData.get('avatar'),
+    url: formData.get('avatar')?.trim(),
     alt: 'User Avatar',
   };
 
   const banner = {
-    url: formData.get('banner'),
+    url: formData.get('banner')?.trim(),
     alt: 'User Banner',
   };
 
-  const bio = formData.get('bio');
+  const bio = formData.get('bio')?.trim();
 
-  updateProfile(username, avatar, banner, bio);
+  try {
+    await updateProfile(username, avatar, banner, bio);
+    alert('Profile updated successfully!');
+  } catch (error) {
+    console.error('Failed to update profile:', error);
+    alert('An error occurred while updating your profile.');
+  }
 };

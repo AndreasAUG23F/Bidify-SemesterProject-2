@@ -1,12 +1,9 @@
 /**
- * Handles the bidding process for a listing.
- * Prevents default form submission, extracts bid amount and listing ID,
- * and calls the API to place a bid.
+ * Submits a bid for the current listing.
  * @module BidHandler
  * @async
  * @function onBid
- * @param {Event} event - The form submission event.
- * @throws {Error} - Logs errors if the bid submission API call fails.
+ * @param {Event} event - The bid form submission event.
  */
 
 import { fetchBid } from '../../api/listing/bid';
@@ -15,14 +12,19 @@ export const onBid = async (event) => {
   event.preventDefault();
 
   const formData = new FormData(event.target);
-
-  const bidAmount = formData.get('bidAmount');
+  const amount = Number(formData.get('bidAmount'));
 
   const listingId = JSON.parse(localStorage.getItem('listingId'));
+  const id = listingId?.id || listingId; // fallback if it's not wrapped in an object
 
-  const id = listingId.id;
+  if (!id || isNaN(amount) || amount <= 0) {
+    alert('Please enter a valid bid amount.');
+    return;
+  }
 
-  const amount = Number(bidAmount);
-
-  fetchBid(amount, id);
+  try {
+    await fetchBid(amount, id);
+  } catch (error) {
+    console.error('Failed to place bid:', error);
+  }
 };

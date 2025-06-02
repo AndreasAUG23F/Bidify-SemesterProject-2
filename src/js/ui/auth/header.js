@@ -1,15 +1,16 @@
 /**
  * Dynamically creates and renders the header section of the website.
- * Includes navigation links, a responsive menu toggle, and logout functionality for logged-in users.
+ * Includes navigation links, a responsive menu toggle, and logout functionality.
  * @module Header
  * @function makeHeader
- * @throws {Error} - Logs errors if the header element is not found or rendering fails.
  */
-
-import { setLogoutListener } from '../global/logout';
 
 export const makeHeader = () => {
   const header = document.querySelector('header');
+  if (!header) {
+    console.error('<header> element not found in the DOM.');
+    return;
+  }
 
   header.innerHTML = '';
 
@@ -19,14 +20,11 @@ export const makeHeader = () => {
 
   const logoLink = document.createElement('a');
   logoLink.href = '/';
-  logoLink.className = 'inline-block';
-
   const logoImg = document.createElement('img');
   logoImg.src = '/images/bidifyLogo.png';
   logoImg.alt = 'Logo';
   logoImg.className =
     'h-16 w-auto md:h-20 transition-transform transform hover:scale-110 duration-300';
-
   logoLink.append(logoImg);
 
   const navLinksDiv = document.createElement('div');
@@ -35,53 +33,48 @@ export const makeHeader = () => {
 
   const homeLink = document.createElement('a');
   homeLink.href = '/';
-  homeLink.className = 'font-medium text-gray-700 hover:text-gray-900';
   homeLink.textContent = 'Home';
-  navLinksDiv.append(homeLink);
+  homeLink.className = 'font-medium text-gray-700 hover:text-gray-900';
+  navLinksDiv.appendChild(homeLink);
 
-  const loggedIn = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
 
-  if (loggedIn) {
+  if (token) {
     const createListingLink = document.createElement('a');
     createListingLink.href = '/listing/create/';
+    createListingLink.textContent = 'Create Listing';
     createListingLink.className =
       'font-medium text-gray-700 hover:text-gray-900';
-    createListingLink.textContent = 'Create Listing';
 
     const profileLink = document.createElement('a');
     profileLink.href = '/profile/';
-    profileLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     profileLink.textContent = 'Profile';
-
-    navLinksDiv.append(createListingLink, profileLink);
+    profileLink.className = 'font-medium text-gray-700 hover:text-gray-900';
 
     const logoutButton = document.createElement('button');
     logoutButton.id = 'logoutButton';
-    logoutButton.className = `
-     bg-red-500
-     text-white
-     font-medium
-      py-2
-     px-4
-     rounded-lg
-     transform
-     transition
-     duration-300
-     hover:scale-105
-     hover:bg-red-600
-     `;
     logoutButton.textContent = 'Logout';
-    navLinksDiv.append(logoutButton);
+    logoutButton.className = `
+      bg-red-500 text-white font-medium py-2 px-4 rounded-lg 
+      transform transition duration-300 hover:scale-105 hover:bg-red-600
+    `;
+    logoutButton.addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userData');
+      window.location.href = '/';
+    });
+
+    navLinksDiv.append(createListingLink, profileLink, logoutButton);
   } else {
     const registerLink = document.createElement('a');
     registerLink.href = '/auth/register/';
-    registerLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     registerLink.textContent = 'Register';
+    registerLink.className = 'font-medium text-gray-700 hover:text-gray-900';
 
     const loginLink = document.createElement('a');
     loginLink.href = '/auth/login/';
-    loginLink.className = 'font-medium text-gray-700 hover:text-gray-900';
     loginLink.textContent = 'Login';
+    loginLink.className = 'font-medium text-gray-700 hover:text-gray-900';
 
     navLinksDiv.append(registerLink, loginLink);
   }
@@ -110,6 +103,4 @@ export const makeHeader = () => {
 
   mediaQuery.addEventListener('change', handleMediaChange);
   handleMediaChange(mediaQuery);
-
-  setLogoutListener();
 };

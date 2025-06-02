@@ -15,14 +15,14 @@ import { showLoader, hideLoader } from '../../ui/global/loader';
  * @returns {Promise<Object|undefined>} - The result of the API call if successful, or undefined if it fails.
  * @throws {Error} - Logs errors if the API call fails.
  */
-export async function createListing(title, description, endsAt, tags, media) {
-  const body = {
-    title,
-    description,
-    endsAt,
-    tags,
-    media,
-  };
+export default async function createListing(
+  title,
+  description,
+  endsAt,
+  tags,
+  media
+) {
+  const body = { title, description, endsAt, tags, media };
 
   showLoader();
   try {
@@ -35,19 +35,16 @@ export async function createListing(title, description, endsAt, tags, media) {
     const result = await response.json();
 
     if (!response.ok) {
-      console.error('Failed to create listing. Status:', response.status);
-      console.error('API response body:', result);
-
       alert(`Failed to create listing: ${result.message || 'Unknown error'}`);
+      console.error(result);
       return null;
     }
 
     alert('Listing created successfully!');
     return result;
   } catch (error) {
-    console.error('Something went wrong while creating the listing:', error);
-
-    alert('An error occurred while creating the listing. Please try again.');
+    console.error('Error creating listing:', error);
+    alert('An error occurred while creating the listing.');
     return null;
   } finally {
     hideLoader();

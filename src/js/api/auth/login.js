@@ -1,3 +1,7 @@
+import { hideLoader, showLoader } from '../../ui/global/loader';
+import { API_AUTH_LOGIN } from '../constants';
+import { headers } from '../header';
+
 /**
  * Handles user login by sending credentials to the authentication API.
  * Stores the user's access token and data in localStorage upon successful login.
@@ -10,12 +14,7 @@
  * @returns {Promise<void>} - No return value.
  * @throws {Error} - Logs and alerts errors if the login request fails.
  */
-
-import { hideLoader, showLoader } from '../../ui/global/loader';
-import { API_AUTH_LOGIN } from '../constants';
-import { headers } from '../header';
-
-export async function login({ email, password }) {
+export default async function login({ email, password }) {
   const body = { email, password };
 
   showLoader();

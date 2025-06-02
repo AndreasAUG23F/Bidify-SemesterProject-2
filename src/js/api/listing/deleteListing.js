@@ -11,7 +11,7 @@ import { showLoader, hideLoader } from '../../ui/global/loader';
  * @returns {Promise<boolean>} - Returns `true` if the listing was successfully deleted, otherwise `false`.
  * @throws {Error} - Logs errors if the API call fails.
  */
-export async function deleteListing(id) {
+export default async function deleteListing(id) {
   showLoader();
   try {
     const response = await fetch(`${AUCTION_LISTINGS}/${id}`, {
@@ -23,15 +23,14 @@ export async function deleteListing(id) {
       alert('Listing successfully deleted.');
       return true;
     } else {
-      console.error(`Failed to delete listing: ${response.status}`);
       alert(
         `Failed to delete listing: ${response.statusText || 'Unknown error'}`
       );
       return false;
     }
   } catch (error) {
-    console.error(`Error deleting listing:`, error);
-    alert('An error occurred while deleting the listing. Please try again.');
+    console.error('Error deleting listing:', error);
+    alert('An error occurred while deleting the listing.');
     return false;
   } finally {
     hideLoader();

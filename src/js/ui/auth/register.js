@@ -1,14 +1,15 @@
 /**
  * Handles the registration form submission.
  * Prevents the default form submission behavior and gathers input data for registration.
- * Calls the API to register the user.
+ * Performs client-side validation and calls the API to register the user.
  * @module RegisterHandler
  * @async
  * @function onRegister
  * @param {Event} event - The form submission event.
  * @throws {Error} - Logs errors if the registration API call fails.
  */
-import { register } from '../../api/auth/register.js';
+
+import register from '../../api/auth/register.js';
 
 export async function onRegister(event) {
   event.preventDefault();
@@ -26,14 +27,12 @@ export async function onRegister(event) {
   const urlPattern = /^https?:\/\/.+$/;
 
   if (!namePattern.test(name)) {
-    alert(
-      'Name must not contain punctuation symbols apart from underscore (_).'
-    );
+    alert('Name must only contain letters, numbers, and underscores.');
     return;
   }
 
   if (!emailPattern.test(email)) {
-    alert('Email must be a valid stud.noroff.no email address.');
+    alert('Email must be a valid stud.noroff.no address.');
     return;
   }
 
@@ -43,15 +42,19 @@ export async function onRegister(event) {
   }
 
   if (image && !urlPattern.test(image)) {
-    alert('If set, the image URL must be valid.');
+    alert('Image URL must be valid (starting with http or https).');
     return;
   }
 
-  const registerData = { name, email, password, image };
+  const registerData = { name, email, password };
+  if (image) {
+    registerData.avatar = image;
+  }
 
   try {
     await register(registerData);
-    alert('Registration successful!');
+    alert('Registration successful! Redirecting to login page.');
+    window.location.href = '/auth/login/';
   } catch (error) {
     console.error('Registration failed:', error);
     alert('An error occurred during registration.');

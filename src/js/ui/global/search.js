@@ -1,41 +1,10 @@
 /**
- * Handles the initialization and functionality of the search feature for listings.
- * Fetches all listings, filters them based on user input, and displays the results dynamically.
+ * Initializes live search for listings.
+ * Fetches all listings and filters them based on input.
  * @module Search
  */
 
-/**
- * Fetches all listings and initializes the display with an empty result set.
- * @async
- * @function fetchListings
- * @throws {Error} - Logs errors if listings cannot be fetched.
- */
-
-/**
- * Renders a list of filtered listings based on the user's query.
- * If no query is provided, hides the results container.
- * @function renderListings
- * @param {Array<Object>} listings - The filtered listings to display.
- * @param {string} [query=''] - The search query used to filter listings.
- */
-
-/**
- * Filters listings based on the search query entered by the user.
- * Updates the display with the filtered results.
- * @function filterListings
- * @param {string} query - The user's search query.
- */
-
-/**
- * Initializes the search functionality.
- * Sets up event listeners for search input and clear button.
- * Fetches all listings to enable filtering.
- * @async
- * @function initSearch
- * @throws {Error} - Logs errors if initialization fails.
- */
-
-import { readListings } from '../../api/listing/read';
+import readListings from '../../api/listing/read/readListings';
 
 const searchInput = document.getElementById('searchInput');
 const clearSearch = document.getElementById('clearSearch');
@@ -58,7 +27,6 @@ const fetchListings = async () => {
 
 const renderListings = (listings, query = '') => {
   resultsContainer.innerHTML = '';
-
   if (query && (!listings || listings.length === 0)) {
     resultsContainer.innerHTML =
       '<p class="text-gray-500 text-center">No results found.</p>';
@@ -66,7 +34,7 @@ const renderListings = (listings, query = '') => {
     return;
   }
 
-  if (listings.length === 0) {
+  if (!listings.length) {
     resultsContainer.classList.add('hidden');
     return;
   }
@@ -74,52 +42,46 @@ const renderListings = (listings, query = '') => {
   resultsContainer.classList.remove('hidden');
 
   listings.forEach((listing) => {
-    const postCard = document.createElement('div');
-    postCard.className =
-      'bg-white border border-gray-200 rounded-lg shadow hover:shadow-xl transition duration-300 overflow-hidden';
+    const card = document.createElement('div');
+    card.className =
+      'bg-white border rounded-lg shadow overflow-hidden hover:shadow-xl transition';
 
-    postCard.innerHTML = `
-      <div class="relative">
-        <img src="${listing.media?.[0]?.url || 'https://via.placeholder.com/300x200'}" 
-             alt="Post image" 
-             class="w-full h-40 sm:h-48 object-cover">
+    const imgUrl =
+      listing.media?.[0]?.url || 'https://via.placeholder.com/300x200';
+    const avatar =
+      listing.seller?.avatar?.url || 'https://via.placeholder.com/50';
+
+    card.innerHTML = `
+      <div>
+        <img src="${imgUrl}" alt="Listing Image" class="w-full h-48 object-cover" />
       </div>
-      <div class="p-4 flex flex-col gap-4">
+      <div class="p-4">
         <div class="flex items-center gap-4">
-          <img src="${listing.seller?.avatar?.url || 'https://via.placeholder.com/50'}" 
-               alt="Seller Avatar" 
-               class="w-10 h-10 rounded-full object-cover border border-gray-200">
+          <img src="${avatar}" alt="Seller Avatar" class="w-10 h-10 rounded-full object-cover border" />
           <div>
             <h2 class="text-lg font-semibold text-gray-800 truncate">${listing.title}</h2>
-            <p class="text-sm text-gray-600">Posted by: ${listing.seller?.name || 'Unknown Seller'}</p>
+            <p class="text-sm text-gray-600">Posted by: ${listing.seller?.name || 'Unknown'}</p>
           </div>
         </div>
-        <a href="/listing/?id=${listing.id}" 
-           class="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg text-center font-medium hover:bg-blue-700 transition">
-           Check out post
+        <a href="/listing/?id=${listing.id}" class="block mt-4 bg-blue-600 text-white py-2 px-4 rounded text-center hover:bg-blue-700 transition">
+          View Listing
         </a>
       </div>
     `;
-    resultsContainer.appendChild(postCard);
+    resultsContainer.appendChild(card);
   });
 };
 
 const filterListings = (query) => {
-  if (!query) {
-    renderListings([]);
-    return;
-  }
-
-  const filteredListings = allListings.filter((listing) =>
-    listing.title.toLowerCase().includes(query.toLowerCase())
+  const filtered = allListings.filter((l) =>
+    l.title.toLowerCase().includes(query.toLowerCase())
   );
-  renderListings(filteredListings, query);
+  renderListings(filtered, query);
 };
 
 searchInput.addEventListener('input', (e) => {
   const query = e.target.value.trim();
   filterListings(query);
-
   clearSearch.style.display = query ? 'block' : 'none';
 });
 
